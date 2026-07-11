@@ -6,7 +6,10 @@ import mongoose from "mongoose"
 import JWT from "jsonwebtoken"
 
 
-
+const cookieOptions = {
+    httpOnly: true,
+    secure: false,
+}
 
 const registerUser = asyncHandler(
     async (req, res) => {
@@ -55,13 +58,10 @@ const registerUser = asyncHandler(
             process.env.JWT_SECRET,
             {expiresIn: "7d"}
         )
-        res.cookie("accessToken", token,{
-            httpOnly: true,
-            secure: true,
-        })
 
         res
         .status(200)
+        .cookie("accessToken", token, cookieOptions)
         .json(
             new ApiResponce(
                 200,
@@ -115,13 +115,12 @@ const login = asyncHandler(
             process.env.JWT_SECRET,
             {expiresIn: "7d"}
         )
-        res.cookie("accessToken", token,{
-            httpOnly: true,
-            secure: true,
-        })
+
 
         res
         .status(200)
+        .cookie("accessToken", token, cookieOptions)
+
         .json(
             new ApiResponce(
                 200,
@@ -136,7 +135,31 @@ const login = asyncHandler(
     }
 )
 
+const me = asyncHandler(
+    async (req, res) => {
+        // get user data from athnticator
+        const data = await req.userData
+        
+        // check if value exists
+        if(!data) throw new ApiError(400, "could not find user 🤣")
+
+        // return value
+        res
+        .status(400)
+        .json( new ApiResponce(
+            200,
+            {
+                _id: data._id,
+                usernmae: data.username,
+                email: data.email                
+            },
+            ""
+        ))
+    }
+)
+
 export {
     registerUser,
-    login
+    login,
+    me
 }

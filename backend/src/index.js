@@ -7,7 +7,6 @@ import {dbConnect} from "./DB/mongoConnect.js"
 
 
 const port = process.env.PORT || 3000
-console.log(port);
 
 
 
