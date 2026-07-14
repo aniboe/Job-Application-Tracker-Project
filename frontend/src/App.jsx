@@ -1,12 +1,16 @@
 import React from 'react'
-import Login from './auth/Login'
-import Register from './auth/Register'
+import Login from './pages/auth/Login'
+import Register from './pages/auth/Register'
+import { Route, Routes } from "react-router-dom"
+import Laout from './layout/Laout'
 
 function App() {
   return (
     <>
-      <Login/>
-      <Register/>
+      <Routes>
+        <Route/>
+      </Routes>
+      <Laout/>
     </>
   )
 }

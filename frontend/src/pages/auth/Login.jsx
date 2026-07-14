@@ -1,6 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axios from "axios"
 
 export function Login() {
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+
+    const [errors, setErrors] = useState([])
+
+    const submitHandler = async (e) => {
+        e.preventDefault()
+        try {
+            const sendData = await axios.post("http://localhost:4000/api/v1/user/login", 
+                {
+                    usernameOrEmail: username.toLocaleLowerCase(),
+                    password: password
+                },
+                {withCredentials: true}
+            )
+            setUsername("")
+            setPassword("")
+        } catch (error) {
+            console.log(error.response.data)
+        }
+    } 
   return (
     <>
         <div className='h-screen w-full flex justify-center items-center'>
@@ -10,7 +32,9 @@ export function Login() {
                     Login
                 </h1>
 
-                <div className=' p-1 rounded-sm h-auto '>
+                <form
+                onSubmit={submitHandler} 
+                className=' p-1 rounded-sm h-auto '>
 
                     <div>
                         <div className='flex flex-col text-left mb-3'>
@@ -20,7 +44,14 @@ export function Login() {
                             >
                                 Username
                             </label>
-                            <input className='rounded-lg h-10 border border-gray-200 outline-0 text-xl text-zinc-600 px-2' type="text" />
+
+                            <input 
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className='rounded-lg h-10 border border-gray-200 outline-0 text-xl text-zinc-600 px-2' 
+                            type="text"
+                            autoComplete='username' 
+                            />
                         </div>
 
                         <div className='flex flex-col text-left mb-3'>
@@ -30,7 +61,14 @@ export function Login() {
                             >
                                 Password
                             </label>
-                            <input className='rounded-lg h-10 border border-gray-200 outline-0 text-xl text-zinc-600 px-2' type="password" />
+
+                            <input 
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className='rounded-lg h-10 border border-gray-200 outline-0 text-xl text-zinc-600 px-2' 
+                            type="password"
+                            autoComplete='current-password' 
+                            />
                         </div>
                     </div>
                     
@@ -39,9 +77,10 @@ export function Login() {
                     </div>
 
                     <div className='w-full   mt-5'>
-                        <button className='bg-blue-800 text-white w-full pt-2 pb-2 rounded-xl'>login</button>
+                        <button type='submit'
+                        className='bg-blue-800 text-white w-full pt-2 pb-2 rounded-xl'>login</button>
                     </div>
-                </div>
+                </form>
 
 
 
