@@ -1,7 +1,14 @@
 import React, { useState } from 'react'
 import axios from "axios"
+import { Link, useNavigate } from 'react-router-dom'
+
+
 
 export function Login() {
+
+    const Navigate = useNavigate()
+
+
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
@@ -19,6 +26,8 @@ export function Login() {
             )
             setUsername("")
             setPassword("")
+
+            Navigate("/dashboard")
         } catch (error) {
             console.log(error.response.data)
         }
@@ -115,7 +124,7 @@ export function Login() {
                 </div>
 
                 <div className='text-right text-zinc-500 text-[15px] mt-4'>
-                    <a className='' href="#">Not registered ? <span className='text-blue-800 hover:underline'>register here</span></a>
+                    <Link to="/register">Not registered ? <span className='text-blue-800 hover:underline'>register here</span></Link>
                 </div>
 
             </div>

@@ -1,8 +1,12 @@
 import axios from 'axios'
 import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+
 
 
 export function Register() {
+
+    const Navigate = useNavigate()
 
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
@@ -34,7 +38,8 @@ export function Register() {
             setEmail("")
             setPassword1("")
             setPassword2("")
-            console.log("logged in susseccfully");
+            // console.log("logged in susseccfully");
+            Navigate("/dashboard")
             
         } catch (error) {
             setErrors(error)
@@ -164,7 +169,7 @@ export function Register() {
                 </div>
 
                 <div className='text-right text-zinc-500 text-[15px] mt-4'>
-                    <a className='' href="#">Already registered ? <span className='text-blue-800 hover:underline'>login here</span></a>
+                    <Link to="/login">Already registered ? <span className='text-blue-800 hover:underline'>login here</span></Link>
                 </div>
 
             </div>

@@ -17,6 +17,8 @@ function SideNav() {
                 <div>
                     <ul className='flex flex-col gap-1'>
 
+                        {/* NOTE: remove all the li's and make it into a saperate component later */}
+
                         <li className='pl-6 h-11 rounded-xl flex  justify-start text-zinc-600 hover:bg-blue-100 hover:text-blue-700'>
                             <div className='flex items-center'>
                                 <p className='text-lg font-bold' >L</p>

@@ -1,6 +1,6 @@
 import React from 'react'
-import SideNav from './Sidenav'
-import TopBar from './TopBar'
+import SideNav from './Sidenav.jsx'
+import TopBar from './TopBar.jsx'
 import Dash from "../pages/dashboard/Dash.jsx"
 
 

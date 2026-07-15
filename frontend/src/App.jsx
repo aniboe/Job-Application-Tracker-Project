@@ -2,15 +2,24 @@ import React from 'react'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import { Route, Routes } from "react-router-dom"
-import Laout from './layout/Laout'
+import Layout from './layout/Layout'
+import Dash from './pages/dashboard/Dash'
 
 function App() {
   return (
     <>
       <Routes>
-        <Route/>
+        {/* <Route path='/' element={}/> */}
+        <Route path='/login' element={ <Login/> }/>
+        <Route path='/register' element={ <Register/> }/>
       </Routes>
-      <Laout/>
+
+      <Layout>
+        <Routes>
+          <Route path='/dashboard' element={<Dash/>}/>
+        </Routes>
+      </Layout>
+
     </>
   )
 }
