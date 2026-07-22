@@ -4,7 +4,7 @@ const imag = "https://png.pngtree.com/png-clipart/20210606/original/pngtree-gray
 
 function SideNav() {
   return (
-    <div className='bg-[#EDECEC] min-h-screen min-w-65 border-r border-[#DFDEDE] mx'>
+    <div className='bg-[#EDECEC] h-screen w-65 border-r border-[#DFDEDE] mx overflow-y-auto'>
        <div className='mx-4'>
             <div className='text-4xl font-bold text-center pt-5'>
                 <h1 className='text-blue-600'>L Tracker</h1>

@@ -7,13 +7,13 @@ import Dash from "../pages/dashboard/Dash.jsx"
 function Laout() {
   return (
     <>
-      <div className='h-screen flex'>
+      <div className='h-screen flex overflow-hidden'>
         <SideNav/>
 
         <div className='flex flex-col flex-1'>
           <TopBar/>
 
-          <div className='flex flex-col flex-1'>
+          <div className='flex flex-col flex-1 overflow-auto'>
             <Dash/>
           </div>
         </div>

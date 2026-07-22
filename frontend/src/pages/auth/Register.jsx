@@ -162,7 +162,7 @@ export function Register() {
                             <h1>Google</h1>
                         </button>
 
-                    </div>
+                    </div> 
 
                     
 
