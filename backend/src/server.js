@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser"
 import cors from "cors"
 app.use(cors(
     {
-        origin: "http://localhost:5173",
+        origin: process.env.FRONTEND_ORIGN,
         credentials: true
     }
 ))
@@ -23,6 +23,9 @@ app.use(cookieParser())
 
 import userRouter from "./routes/user.routes.js"
 app.use("/api/v1/user", userRouter)
+
+import dataRouter from "./routes/data.routes.js"
+app.use("/api/v1/data")
 
 
 // error handler middleware
