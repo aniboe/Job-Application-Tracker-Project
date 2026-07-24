@@ -25,7 +25,7 @@ import userRouter from "./routes/user.routes.js"
 app.use("/api/v1/user", userRouter)
 
 import dataRouter from "./routes/data.routes.js"
-app.use("/api/v1/data")
+app.use("/api/v1/data", dataRouter)
 
 
 // error handler middleware

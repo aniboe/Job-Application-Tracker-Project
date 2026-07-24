@@ -4,9 +4,9 @@ const DataSchema = mongoose.Schema(
     {
         user: {
             type: Schema.Types.ObjectId,
-            ref: User,
+            ref: "User",
         },
-        company: {
+        companyName: {
             type: String,
             requiredL: true
         },
@@ -18,10 +18,10 @@ const DataSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        salary: {
+        salaryRange: {
             type: String,
         },
-        link: {
+        companyLink: {
             type: String,
         },
         status: {
