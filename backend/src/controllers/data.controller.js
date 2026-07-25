@@ -2,6 +2,7 @@ import { asyncHandler } from "../utility/asyncHandler.js"
 import { ApiError } from "../utility/ApiError.js"
 import { Data } from "../models/data.model.js"
 import { ApiResponce } from "../utility/ApiResponse.js"
+import { APPLICATION_STATUS } from "../constants/statusOptions.js"
 
 // create data controller
 
@@ -141,10 +142,33 @@ const deleteApplication = asyncHandler(
     }
 )
 
+// a saperate controller for status options
+const statusProvider = asyncHandler(
+    async (req, res) => {
+        // res
+        // .status(200)
+        // .json( // json only takes only output only one value so it has to be in object
+        //     {
+        //         status: APPLICATION_STATUS, 
+        //         APIResponce: new ApiResponce(
+        //             200,
+        //             APPLICATION_STATUS,
+        //             "here is your data"
+        //         )  
+        //     }
+        // )
+
+        res
+        .status(200)
+        .json(APPLICATION_STATUS) // not using API responce 
+    }
+
+)
 
 export {
     addData,
     readAll,
     updateApplication,
     deleteApplication,
+    statusProvider
 }

@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose"
+import { APPLICATION_STATUS } from "../constants/statusOptions.js"
 
 const DataSchema = mongoose.Schema(
     {
@@ -8,11 +9,11 @@ const DataSchema = mongoose.Schema(
         },
         companyName: {
             type: String,
-            requiredL: true
+            required: true
         },
         role: {
             type: String,
-            require: true,
+            required: true,
         },
         location: {
             type: String,
@@ -23,9 +24,13 @@ const DataSchema = mongoose.Schema(
         },
         companyLink: {
             type: String,
+            required: true,
+            lowercase: true,
         },
         status: {
             type: String,
+            enum: APPLICATION_STATUS,
+            default: APPLICATION_STATUS[0],
             required: true,
         }
     },
