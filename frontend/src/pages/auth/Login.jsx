@@ -59,7 +59,8 @@ export function Login() {
                             onChange={(e) => setUsername(e.target.value)}
                             className='rounded-lg h-10 border border-gray-200 outline-0 text-xl text-zinc-600 px-2' 
                             type="text"
-                            autoComplete='username' 
+                            autoComplete='username'
+                            required 
                             />
                         </div>
 
@@ -76,7 +77,8 @@ export function Login() {
                             onChange={(e) => setPassword(e.target.value)}
                             className='rounded-lg h-10 border border-gray-200 outline-0 text-xl text-zinc-600 px-2' 
                             type="password"
-                            autoComplete='current-password' 
+                            autoComplete='current-password'
+                            required
                             />
                         </div>
                     </div>

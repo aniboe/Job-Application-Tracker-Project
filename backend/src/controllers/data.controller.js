@@ -34,7 +34,6 @@ const addData = asyncHandler(
         if(!addedData){
             throw new ApiError(400, "there was some errer while making application")
         }
-        console.log(addedData);
         
 
         res
@@ -143,7 +142,7 @@ const deleteApplication = asyncHandler(
 )
 
 // a saperate controller for status options
-const statusProvider = asyncHandler(
+const statusListProvider = asyncHandler(
     async (req, res) => {
         // res
         // .status(200)
@@ -165,10 +164,44 @@ const statusProvider = asyncHandler(
 
 )
 
+const sendStatusCount = asyncHandler(
+    async (req, res) => {
+
+        const statusData = await Data.aggregate(
+            [
+                {
+                    $group:{
+                        _id: "$status",
+                        count: {$sum: 1}
+                    }
+                }
+            ]
+        )
+
+        if(!statusData){
+            throw new ApiError(400, "something went wrong while fetching data")
+        }
+
+        // res
+        // .status(200)
+        // .json( new ApiResponce(
+        //     200,
+        //     statusData,
+        //     "status count recieved successfully"
+        // ))
+        res
+        .status(200)
+        .json(statusData) // not uing apiResponse here as well
+
+
+    }
+)
+
 export {
     addData,
     readAll,
     updateApplication,
     deleteApplication,
-    statusProvider
+    statusListProvider,
+    sendStatusCount
 }

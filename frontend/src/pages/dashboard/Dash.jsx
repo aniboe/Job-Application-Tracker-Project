@@ -1,8 +1,41 @@
 import React from 'react'
+import axios from "axios"
+
 import LineGaph from './chart/LineGaph'
 import BarGraph from './chart/BarGraph'
+import { useEffect } from 'react'
+import { useState } from 'react'
 
 function Dash() {
+
+  const [cardStatusCount, setCardStatusCount] = useState({})
+  
+  
+
+  // get status count
+  useEffect(() => {
+
+    const runThis = async() => {
+      try {
+        const statusData = await axios.get("http://localhost:4000/api/v1/data/get-status-count", {withCredentials: true})
+
+        
+        // converting data for CARDS from "{_id: 'Applied', count: 8}" => "{Applied: 8}"
+        const properObjectData = statusData.data.reduce((acc,{_id, count}) => {
+          acc[_id] = count
+          return acc
+        }, {})
+        
+        setCardStatusCount(properObjectData)
+      }
+      catch (error) {
+        console.log("somethig went : ",error); // later pass it into error State
+      }
+    }
+    runThis()
+  },[])
+
+
   return (
     <div className='w-full h-full p-5 grid gap-7'>
 
@@ -12,7 +45,7 @@ function Dash() {
 
       <div>
         <h1 className='text-2xl font-bold'>Dashboard</h1>
-        <p>todays date</p>
+        <p>{ new Date().toDateString() }</p>
       </div>
 
 
@@ -22,32 +55,37 @@ function Dash() {
       {/*NOTE: information part of the page (have to convert into individual components) */}
 
       <div className='grid gap-7'>
-        <div className='h-20 grid grid-cols-12 gap-7'>
+        <div className='h-20 grid grid-cols-10 gap-7'>
 
-
-          <div className=' bg-gray-200 col-span-3 p-4 rounded-xl'>
-            <h1 className='text-xl font-bold text-gray-700'>5</h1>
-            <p className=''>Application</p>
+        
+          <div className=' bg-gray-200 col-span-2 p-4 rounded-xl'>
+            <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Applied  || "null"}</h1>
+            <p className=''>Applied</p>
           </div>
 
           
-          <div className=' bg-gray-200 col-span-3 p-4 rounded-xl'>
-            <h1 className='text-xl font-bold text-gray-700'>5</h1>
+          <div className=' bg-gray-200 col-span-2 p-4 rounded-xl'>
+            <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Interview  || "null"}</h1>
             <p className=''>Interview</p>
           </div>
 
           
-          <div className=' bg-gray-200 col-span-3 p-4 rounded-xl'>
-            <h1 className='text-xl font-bold text-gray-700'>5</h1>
+          <div className=' bg-gray-200 col-span-2 p-4 rounded-xl'>
+            <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Offer  || "null"}</h1>
             <p className=''>Offer</p>
           </div>
 
           
-          <div className=' bg-gray-200 col-span-3 p-4 rounded-xl'>
-            <h1 className='text-xl font-bold text-gray-700'>5</h1>
+          <div className=' bg-gray-200 col-span-2 p-4 rounded-xl'>
+            <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Rejected || "null"}</h1>
             <p className=''>Rejected</p>
           </div>
 
+
+          <div className=' bg-gray-200 col-span-2 p-4 rounded-xl'>
+            <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Accepted  || "null"}</h1>
+            <p className=''>Accepted</p>
+          </div>
           
         </div>
         
@@ -66,7 +104,7 @@ function Dash() {
 
           <div className='p-4 col-span-5 bg-zinc-300
            rounded-xl flex items-center justify-center'>
-            <BarGraph/>
+            <BarGraph   barGraphData={ cardStatusCount }/>
           </div>
         </div>
 

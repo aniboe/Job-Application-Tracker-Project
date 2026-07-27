@@ -74,6 +74,7 @@ export function Register() {
                             autoComplete='username'
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            required
                             />
                         </div>
 
@@ -91,6 +92,7 @@ export function Register() {
                             autoComplete='email'
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            required
                             />
                         </div>
 
@@ -108,6 +110,7 @@ export function Register() {
                             autoComplete='new-password'
                             value={password1}
                             onChange={(e) => setPassword1(e.target.value)}
+                            required
                             />
                         </div>
                         <div className='flex flex-col text-left mb-3'>
@@ -123,6 +126,7 @@ export function Register() {
                             autoComplete='new-password'
                             value={password2}
                             onChange={(e) => setPassword2(e.target.value)}
+                            required
                             />
                         </div>
 
