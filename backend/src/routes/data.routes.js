@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addData, deleteApplication, readAll, sendStatusCount, statusListProvider, updateApplication } from "../controllers/data.controller.js";
+import { addData, deleteApplication, readAll, graphData, statusListProvider, updateApplication } from "../controllers/data.controller.js";
 import { authenticate } from "../middlewares/verifyJWT.js";
 
 const dataRouter = Router()
@@ -10,6 +10,6 @@ dataRouter.route("/read-all-applications").get(authenticate, readAll)
 dataRouter.route("/update-application/:id").patch(authenticate, updateApplication)
 dataRouter.route("/delete-application/:id").delete(authenticate, deleteApplication)
 dataRouter.route("/get-status-list").get(authenticate, statusListProvider)
-dataRouter.route("/get-status-count").get(authenticate, sendStatusCount)
+dataRouter.route("/get-graph-data").get(authenticate, graphData)
 
 export default dataRouter

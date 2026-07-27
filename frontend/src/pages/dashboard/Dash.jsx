@@ -9,7 +9,7 @@ import { useState } from 'react'
 function Dash() {
 
   const [cardStatusCount, setCardStatusCount] = useState({})
-  
+  const [lineGraphData, setLineGraphData] = useState([])
   
 
   // get status count
@@ -17,15 +17,16 @@ function Dash() {
 
     const runThis = async() => {
       try {
-        const statusData = await axios.get("http://localhost:4000/api/v1/data/get-status-count", {withCredentials: true})
-
+        const statusData = await axios.get("http://localhost:4000/api/v1/data/get-graph-data", {withCredentials: true})
+        // console.log(statusData.data);
         
         // converting data for CARDS from "{_id: 'Applied', count: 8}" => "{Applied: 8}"
-        const properObjectData = statusData.data.reduce((acc,{_id, count}) => {
+        const properObjectData = statusData.data.statusAndBarGraphData.reduce((acc,{_id, count}) => {
           acc[_id] = count
           return acc
         }, {})
         
+        setLineGraphData(statusData?.data.lineGraphData)
         setCardStatusCount(properObjectData)
       }
       catch (error) {
@@ -99,12 +100,12 @@ function Dash() {
         <div className='h-80 grid grid-cols-12 gap-7'>
 
           <div className='p-4 col-span-7 bg-zinc-300 rounded-xl flex items-center justify-center'>
-            <LineGaph/>
+            <LineGaph  lineGraphData = { lineGraphData }/>
           </div>
 
           <div className='p-4 col-span-5 bg-zinc-300
            rounded-xl flex items-center justify-center'>
-            <BarGraph   barGraphData={ cardStatusCount }/>
+            <BarGraph   barGraphData = { cardStatusCount }/>
           </div>
         </div>
 

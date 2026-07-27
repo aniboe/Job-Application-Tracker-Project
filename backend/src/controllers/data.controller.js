@@ -164,7 +164,7 @@ const statusListProvider = asyncHandler(
 
 )
 
-const sendStatusCount = asyncHandler(
+const graphData = asyncHandler(
     async (req, res) => {
 
         const statusData = await Data.aggregate(
@@ -178,7 +178,45 @@ const sendStatusCount = asyncHandler(
             ]
         )
 
-        if(!statusData){
+        const LineData = await Data.aggregate([
+            {
+                $group: {
+                _id: {
+                    date: {
+                    $dateToString: {
+                        format: "%Y-%m-%d",
+                        date: "$createdAt",
+                    },
+                    },
+                },
+                applications: {
+                    $sum: {
+                    $cond: [{ $eq: ["$status", "Applied"] }, 1, 0],
+                    },
+                },
+                interviews: {
+                    $sum: {
+                    $cond: [{ $eq: ["$status", "Interview"] }, 1, 0],
+                    },
+                },
+                },
+            },
+            {
+                $sort: {
+                "_id.date": 1,
+                },
+            },
+            {
+                $project: {
+                _id: 0,
+                date: "$_id.date",
+                applications: 1,
+                interviews: 1,
+                },
+            },
+        ]);
+
+        if(!statusData || !LineData){
             throw new ApiError(400, "something went wrong while fetching data")
         }
 
@@ -191,7 +229,10 @@ const sendStatusCount = asyncHandler(
         // ))
         res
         .status(200)
-        .json(statusData) // not uing apiResponse here as well
+        .json({
+            statusAndBarGraphData: statusData,
+            lineGraphData: LineData
+        }) // not uing apiResponse here as well
 
 
     }
@@ -203,5 +244,5 @@ export {
     updateApplication,
     deleteApplication,
     statusListProvider,
-    sendStatusCount
+    graphData,
 }
