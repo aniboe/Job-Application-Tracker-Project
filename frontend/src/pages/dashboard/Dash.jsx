@@ -5,12 +5,13 @@ import LineGaph from './chart/LineGaph'
 import BarGraph from './chart/BarGraph'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import RecentAplication from './cards/RecentAplication'
 
 function Dash() {
-
+  const [allApplicationData, setAllApplicationData] = useState([])
   const [cardStatusCount, setCardStatusCount] = useState({})
   const [lineGraphData, setLineGraphData] = useState([])
-  
+
 
   // get status count
   useEffect(() => {
@@ -26,6 +27,7 @@ function Dash() {
           return acc
         }, {})
         
+        setAllApplicationData(statusData?.data.allAplicaion)
         setLineGraphData(statusData?.data.lineGraphData)
         setCardStatusCount(properObjectData)
       }
@@ -119,126 +121,15 @@ function Dash() {
             <a href="#" className='text-blue-700'>see all L's </a>
           </div>
 
-
-
-
-
-
-          {/* list of ls */}
-          <div className='border-b border-zinc-500 flex justify-between last:border-0'>
-            
-            <div className='px-3 py-2 flex gap-3 items-center'>
-              <div className='bg-white h-10 w-10 rounded-xl flex items-center justify-center font-bold'>
-                <h1>L</h1>
-              </div>
-
-              <div className='flex flex-col'>
-                <h1 className='font-bold leading-tight'>Dev role</h1>
-                <p className='text-sm leading-tight'>company name</p>
-              </div>
-            </div>
-
-            <div className='flex gap-3 pr-3 items-center'>
-              <div>time</div>
-              <div>status</div>
-            </div>
-
-          </div>
           
-          <div className='border-b border-zinc-500 flex justify-between last:border-0'>
+          {/* list of ls */}
+          {allApplicationData.slice(0, 10).map((val)=>(
             
-            <div className='px-3 py-2 flex gap-3 items-center'>
-              <div className='bg-white h-10 w-10 rounded-xl flex items-center justify-center font-bold'>
-                <h1>L</h1>
-              </div>
-
-              <div className='flex flex-col'>
-                <h1 className='font-bold leading-tight'>Dev role</h1>
-                <p className='text-sm leading-tight'>company name</p>
-              </div>
-            </div>
-
-            <div className='flex gap-3 pr-3 items-center'>
-              <div>time</div>
-              <div>status</div>
-            </div>
-
-          </div>
-
-          <div className='border-b border-zinc-500 flex justify-between last:border-0'>
-            
-            <div className='px-3 py-2 flex gap-3 items-center'>
-              <div className='bg-white h-10 w-10 rounded-xl flex items-center justify-center font-bold'>
-                <h1>L</h1>
-              </div>
-
-              <div className='flex flex-col'>
-                <h1 className='font-bold leading-tight'>Dev role</h1>
-                <p className='text-sm leading-tight'>company name</p>
-              </div>
-            </div>
-
-            <div className='flex gap-3 pr-3 items-center'>
-              <div>time</div>
-              <div>status</div>
-            </div>
-
-          </div>
-
-          <div className='border-b border-zinc-500 flex justify-between last:border-0'>
-            
-            <div className='px-3 py-2 flex gap-3 items-center'>
-              <div className='bg-white h-10 w-10 rounded-xl flex items-center justify-center font-bold'>
-                <h1>L</h1>
-              </div>
-
-              <div className='flex flex-col'>
-                <h1 className='font-bold leading-tight'>Dev role</h1>
-                <p className='text-sm leading-tight'>company name</p>
-              </div>
-            </div>
-
-            <div className='flex gap-3 pr-3 items-center'>
-              <div>time</div>
-              <div>status</div>
-            </div>
-
-          </div>
-
-          <div className='border-b border-zinc-500 flex justify-between last:border-0'>
-            
-            <div className='px-3 py-2 flex gap-3 items-center'>
-              <div className='bg-white h-10 w-10 rounded-xl flex items-center justify-center font-bold'>
-                <h1>L</h1>
-              </div>
-
-              <div className='flex flex-col'>
-                <h1 className='font-bold leading-tight'>Dev role</h1>
-                <p className='text-sm leading-tight'>company name</p>
-              </div>
-            </div>
-
-            <div className='flex gap-3 pr-3 items-center'>
-              <div>time</div>
-              <div>status</div>
-            </div>
-
-          </div>
-
-
-
-
-
+            <li key={val._id} className='border-b border-zinc-500 flex justify-between last:border-0'>
+                <RecentAplication cardDetails = {val}/>
+            </li>            
+          ))}
         </div>
-
-
-
-
-
-
-
-
-
 
       </div>
     </div>

@@ -216,9 +216,17 @@ const graphData = asyncHandler(
             },
         ]);
 
-        if(!statusData || !LineData){
-            throw new ApiError(400, "something went wrong while fetching data")
+        const allApplicationData = await Data.find()
+
+        if(
+            [statusData, LineData, allApplicationData].some((val) => !val)
+        ){
+            throw new ApiError(400, "somethingwent wrong while fetching required data")
         }
+
+        // if(!statusData || !LineData){
+        //     throw new ApiError(400, "something went wrong while fetching data")
+        // }
 
         // res
         // .status(200)
@@ -231,7 +239,8 @@ const graphData = asyncHandler(
         .status(200)
         .json({
             statusAndBarGraphData: statusData,
-            lineGraphData: LineData
+            lineGraphData: LineData,
+            allAplicaion: allApplicationData
         }) // not uing apiResponse here as well
 
 
