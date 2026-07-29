@@ -20,7 +20,7 @@ function RecentAplication({cardDetails}) {
       </div>
 
       <div className='flex gap-3 pr-3 items-center'>
-          <div>{cardDetails.createdAt.slice(0,9)}</div>
+          <div>{cardDetails.createdAt.slice(0,10)}</div>
           <div>{cardDetails.status}</div>
       </div>
     </>

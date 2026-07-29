@@ -7,10 +7,26 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import RecentAplication from './cards/RecentAplication'
 
+import { addApplicationData } from '../../redux/slices/aplicationData.slice.js'
+import { useDispatch, useSelector } from "react-redux"
+import { allAplications } from '../../redux/slices/aplicationData.slice.js'
+
+
+
+
 function Dash() {
-  const [allApplicationData, setAllApplicationData] = useState([])
+
+  const dispatch = useDispatch()
+
+  // xdont need this line because "recentTenApplication" is derived from redix state
+  // const [recentApplications, setRecentApplications] = useState([]) 
   const [cardStatusCount, setCardStatusCount] = useState({})
   const [lineGraphData, setLineGraphData] = useState([])
+
+  
+  // this is derived from redux state
+  const recentTenApplication = useSelector(allAplications).slice(0, 10) 
+  
 
 
   // get status count
@@ -27,9 +43,12 @@ function Dash() {
           return acc
         }, {})
         
-        setAllApplicationData(statusData?.data.allAplicaion)
+        // setRecentApplications(recentTenApplication) // this has to be done outside sinde data is being recieved from redux not this api
         setLineGraphData(statusData?.data.lineGraphData)
         setCardStatusCount(properObjectData)
+
+        dispatch(addApplicationData(statusData?.data.allAplicaion)) // redux
+        
       }
       catch (error) {
         console.log("somethig went : ",error); // later pass it into error State
@@ -123,7 +142,7 @@ function Dash() {
 
           
           {/* list of ls */}
-          {allApplicationData.slice(0, 10).map((val)=>(
+          {recentTenApplication.reverse().map((val)=>( // not using "sort()" because "reverse()" works better here 
             
             <li key={val._id} className='border-b border-zinc-500 flex justify-between last:border-0'>
                 <RecentAplication cardDetails = {val}/>

@@ -1,7 +1,7 @@
 import React from 'react'
 import SideNav from './Sidenav.jsx'
 import TopBar from './TopBar.jsx'
-import Dash from "../pages/dashboard/Dash.jsx"
+import { Outlet } from 'react-router-dom'
 
 
 function Laout() {
@@ -14,7 +14,7 @@ function Laout() {
           <TopBar/>
 
           <div className='flex flex-col flex-1 overflow-auto'>
-            <Dash/>
+            <Outlet/>
           </div>
         </div>
       </div>

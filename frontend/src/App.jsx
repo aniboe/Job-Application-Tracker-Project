@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom"
 import Layout from './layout/Layout'
 import Dash from './pages/dashboard/Dash'
 import Landing from './pages/landing/Landing'
+import Application from './pages/applications/Application.jsx'
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
 
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dash/>} />
+          <Route path="/applications" element={<Application/>} />
         </Route>
 
       </Routes>
