@@ -62,17 +62,6 @@ function Dash() {
     <div className='w-full h-full p-5 grid gap-7'>
 
 
-      
-      {/* Header of page */}
-
-      <div>
-        <h1 className='text-2xl font-bold'>Dashboard</h1>
-        <p>{ new Date().toDateString() }</p>
-      </div>
-
-
-
-
 
       {/*NOTE: information part of the page (have to convert into individual components) */}
 

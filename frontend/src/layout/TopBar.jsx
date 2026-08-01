@@ -12,12 +12,11 @@ function TopBar() {
 
                     {/* <img src="" alt="" /> */}
 
-                    <h1>🔍</h1>
-                    <input 
-                        className='pl-1 h-10 w-xl outline-0 text-md text-zinc-700' 
-                        type='text' 
-                        placeholder='search applications... (non functional)'
-                    />
+                    <div>
+                        <h1 className='text-2xl font-bold'>Dashboard</h1>
+                        <p>{ new Date().toDateString() }</p>
+                    </div>
+                    
                 </div>
 
                 <div>

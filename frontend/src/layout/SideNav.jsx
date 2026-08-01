@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from "react-router-dom"
 
 const imag = "https://png.pngtree.com/png-clipart/20210606/original/pngtree-gray-network-placeholder-png-image_6398266.jpg"
 
@@ -28,10 +29,10 @@ function SideNav() {
  
 
                         <li className='pl-6 h-11 rounded-xl flex  justify-start text-zinc-600 hover:bg-blue-100 hover:text-blue-700'>
-                            <div className='flex items-center'>
+                            <Link to="/applications" className='flex items-center'>
                                 <p className='text-lg font-bold' >A</p>
                                 <h1 className='text-lg text-left pl-2'>Application</h1>
-                            </div>
+                            </Link>
                         </li>
  
 
