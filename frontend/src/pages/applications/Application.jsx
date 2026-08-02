@@ -20,7 +20,7 @@ function Application() {
 
 
   return (
-    <div className='flex flex-col w-full h-full p-5 gap-5 bg-gray-200'>
+    <div className='flex flex-col w-full h-full p-3 gap-2 bg-gray-200'>
 
       {/* TopBar */}
       <div className='h-10 flex items-center rounded-md'>
@@ -63,17 +63,20 @@ function Application() {
 
 
       {/*application render box */}
-      <div className=' bg-white flex-1 rounded-md overflow-hidden'>
+      <div className=' bg-white flex-1 flex flex-col min-h-0 rounded-md overflow-hidden'>
         <div className='bg-white h-10 grid grid-cols-12 gap-1 px-2 text-[17px] items-center border-b border-gray-300'>
-          <h1 className='text-gray-600 col-span-5 pl-20'>Role</h1>
-          <h1 className='text-gray-600 col-span-5 pl-10'>Location</h1>
+          <h1 className='text-gray-600 col-span-4 pl-20'>Role/Company</h1>
+          <h1 className='text-gray-600 col-span-3 pl-10'>Location</h1>
+          <h1 className='text-gray-600 col-span-3 text-center pr-10'>Salary</h1>
           <h1 className='text-gray-600 col-span-1'>Date</h1>
-          <h1 className='text-gray-600 col-span-1 text-center'>Status</h1>
+          <h1 className='text-gray-600 col-span-1 text-center pr-8'>Status</h1>
         </div>
 
 
-        <div className='flex flex-col gap-1'>
-          <ApplicationCard/> 
+        <div className='flex-1 flex flex-col my-1 gap-2 overflow-auto min-h-0'>
+          {applicationData.slice().reverse().map((value) => (
+            <ApplicationCard applicationData={value}/>
+          ))}
         </div>
 
       </div>

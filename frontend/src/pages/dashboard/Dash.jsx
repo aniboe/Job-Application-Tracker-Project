@@ -8,15 +8,13 @@ import { useState } from 'react'
 import RecentAplication from './cards/RecentAplication'
 
 import { addApplicationData } from '../../redux/slices/aplicationData.slice.js'
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { allAplications } from '../../redux/slices/aplicationData.slice.js'
 
 
 
 
 function Dash() {
-
-  const dispatch = useDispatch()
 
   // xdont need this line because "recentTenApplication" is derived from redix state
   // const [recentApplications, setRecentApplications] = useState([]) 
@@ -46,8 +44,6 @@ function Dash() {
         // setRecentApplications(recentTenApplication) // this has to be done outside sinde data is being recieved from redux not this api
         setLineGraphData(statusData?.data.lineGraphData)
         setCardStatusCount(properObjectData)
-
-        dispatch(addApplicationData(statusData?.data.allAplicaion)) // redux
         
       }
       catch (error) {

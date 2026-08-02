@@ -13,7 +13,7 @@ function Laout() {
         <div className='flex flex-col flex-1'>
           <TopBar/>
 
-          <div className='flex flex-col flex-1 overflow-auto'>
+          <div className='flex flex-col flex-1 overflow-auto rounded-md m-1'>
             <Outlet/>
           </div>
         </div>
