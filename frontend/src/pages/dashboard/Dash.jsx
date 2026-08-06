@@ -23,7 +23,8 @@ function Dash() {
 
   
   // this is derived from redux state
-  const recentTenApplication = useSelector(allAplications).slice(0, 10) 
+  // const recentTenApplication = useSelector(allAplications).slice().reverse().slice(0,10) 
+  const recentTenApplication = useSelector(allAplications).slice(-15).reverse()
   
 
 
@@ -55,41 +56,42 @@ function Dash() {
 
 
   return (
-    <div className='w-full h-full p-5 grid gap-7'>
+    <div className='np-3 grid gap-3 bg-gray-200 p-3 overflow-hidden'>
+      {/* remove height so that it can cover as much as cild allows */}
 
 
 
       {/*NOTE: information part of the page (have to convert into individual components) */}
 
-      <div className='grid gap-7'>
-        <div className='h-20 grid grid-cols-10 gap-7'>
+      <div className='grid gap-3'>
+        <div className='h-20 grid grid-cols-10 gap-3'>
 
         
-          <div className=' bg-gray-200 col-span-2 p-4 rounded-xl'>
+          <div className=' bg-gray-300 col-span-2 p-4 rounded-xl'>
             <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Applied  || "null"}</h1>
             <p className=''>Applied</p>
           </div>
 
           
-          <div className=' bg-gray-200 col-span-2 p-4 rounded-xl'>
+          <div className=' bg-gray-300 col-span-2 p-4 rounded-xl'>
             <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Interview  || "null"}</h1>
             <p className=''>Interview</p>
           </div>
 
           
-          <div className=' bg-gray-200 col-span-2 p-4 rounded-xl'>
+          <div className=' bg-gray-300 col-span-2 p-4 rounded-xl'>
             <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Offer  || "null"}</h1>
             <p className=''>Offer</p>
           </div>
 
           
-          <div className=' bg-gray-200 col-span-2 p-4 rounded-xl'>
+          <div className=' bg-gray-300 col-span-2 p-4 rounded-xl'>
             <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Rejected || "null"}</h1>
             <p className=''>Rejected</p>
           </div>
 
 
-          <div className=' bg-gray-200 col-span-2 p-4 rounded-xl'>
+          <div className=' bg-gray-300 col-span-2 p-4 rounded-xl'>
             <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Accepted  || "null"}</h1>
             <p className=''>Accepted</p>
           </div>
@@ -119,7 +121,7 @@ function Dash() {
 
 
         {/* NOTE: recent applications */}
-        <div className=' bg-zinc-300 mb-5 h-auto rounded-xl border border-zinc-500 overflow-hidden'>
+        <div className='bg-white flex flex-col rounded-md'>
           <div className='flex items-center justify-between border-b border-zinc-500 p-3 '>
             <h1 className='text-xl font-bold mx-2'>Your recent L's</h1>
             <a href="#" className='text-blue-700'>see all L's </a>
@@ -127,12 +129,11 @@ function Dash() {
 
           
           {/* list of ls */}
-          {recentTenApplication.reverse().map((val)=>( // not using "sort()" because "reverse()" works better here 
-            
-            <li key={val._id} className='border-b border-zinc-500 flex justify-between last:border-0'>
-                <RecentAplication cardDetails = {val}/>
-            </li>            
-          ))}
+          <div className='flex flex-col gap-1'>
+            {recentTenApplication?.map((val)=>( // not using "sort()" because "reverse()" works better here 
+              <RecentAplication key={val._id}  applicationData = {val}/>  
+            ))}
+          </div>
         </div>
 
       </div>

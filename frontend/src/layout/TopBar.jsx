@@ -2,7 +2,7 @@ import React from 'react'
 
 function TopBar() {
   return (
-    <div className=' flex h-17 border-b border-[#DFDEDE]'>
+    <div className=' flex h-17 bg-gray-200 mb-2 rounded-md'>
 
         <div className='w-full mx-9 my-3 flex items-center justify-between'>
 

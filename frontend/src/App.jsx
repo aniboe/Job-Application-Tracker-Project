@@ -16,7 +16,7 @@ function App() {
   useEffect(() => {
     const runThis = async () => {
       const allData = await axios("http://localhost:4000/api/v1/data/get-all-data", {withCredentials: true})
-      console.log("redux lol:",allData.data);
+      // console.log("redux lol:",allData.data);
       dispatch(addApplicationData(allData?.data))
     }
     runThis()

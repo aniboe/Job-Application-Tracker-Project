@@ -1,18 +1,31 @@
 import React, { useState } from 'react'
 import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom'
-
-
+import { useDispatch} from "react-redux"
+import { addApplicationData } from '../../redux/slices/aplicationData.slice'
 
 export function Login() {
 
+    const dispatch = useDispatch()
     const Navigate = useNavigate()
 
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-
     const [errors, setErrors] = useState([])
+
+
+
+    const runMe = async() => {
+        try {
+            const applicationData = await axios("http://localhost:4000/api/v1/data/get-all-data", {withCredentials: true})
+            console.log(applicationData);
+            
+            dispatch(addApplicationData(applicationData?.data))
+        } catch (error) {
+            console.log("some thing went wrong while fetching data", error)
+        }
+    }
 
     const submitHandler = async (e) => {
         e.preventDefault()
@@ -26,7 +39,8 @@ export function Login() {
             )
             setUsername("")
             setPassword("")
-
+            
+            runMe()
             Navigate("/dashboard")
         } catch (error) {
             console.log(error.response.data)
