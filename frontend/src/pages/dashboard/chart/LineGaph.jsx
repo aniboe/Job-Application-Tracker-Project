@@ -3,7 +3,7 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 
 
 function LineGaph({ lineGraphData }) {
-  // console.log(lineGraphData);
+  console.log(lineGraphData);
   
   
   return (

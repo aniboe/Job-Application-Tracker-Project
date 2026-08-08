@@ -12,7 +12,7 @@ export function Login() {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-    const [errors, setErrors] = useState([])
+    const [errors, setErrors] = useState("")
 
 
 
@@ -23,7 +23,7 @@ export function Login() {
             
             dispatch(addApplicationData(applicationData?.data))
         } catch (error) {
-            console.log("some thing went wrong while fetching data", error)
+            console.log("some thing went wrong while fetching data", error.message)
         }
     }
 
@@ -43,7 +43,11 @@ export function Login() {
             runMe()
             Navigate("/dashboard")
         } catch (error) {
-            console.log(error.response.data)
+            // console.log(error.response.data.message)
+            setErrors(error.response.data.message)
+            setTimeout(()=> {
+                setErrors("")
+            },3000)
         }
     } 
   return (
@@ -58,6 +62,8 @@ export function Login() {
                 <form
                 onSubmit={submitHandler} 
                 className=' p-1 rounded-sm h-auto '>
+
+                    <div className='text-red-600 mb-2'>{errors ?? errors}</div>
 
                     <div>
                         <div className='flex flex-col text-left mb-3'>

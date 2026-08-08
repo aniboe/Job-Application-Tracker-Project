@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from "axios"
+import { Link } from "react-router-dom"
 
 import LineGaph from './chart/LineGaph'
 import BarGraph from './chart/BarGraph'
@@ -56,16 +57,16 @@ function Dash() {
 
 
   return (
-    <div className='np-3 grid gap-3 bg-gray-200 p-3 overflow-hidden'>
+    <div className='h-full flex flex-col gap-3 bg-gray-200 p-3 overflow-hidden'>
       {/* remove height so that it can cover as much as cild allows */}
 
 
 
       {/*NOTE: information part of the page (have to convert into individual components) */}
 
-      <div className='grid gap-3'>
-        <div className='h-20 grid grid-cols-10 gap-3'>
+      <div className='h-full flex flex-col gap-3'>
 
+        <div className='h-20 grid grid-cols-10 gap-3 shrink-0'>
         
           <div className=' bg-gray-300 col-span-2 p-4 rounded-xl'>
             <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Applied  || "null"}</h1>
@@ -105,7 +106,7 @@ function Dash() {
 
 
         {/*NOTE: graph part */}
-        <div className='h-80 grid grid-cols-12 gap-7'>
+        <div className='h-80 grid grid-cols-12 gap-7 shrink-0'>
 
           <div className='p-4 col-span-7 bg-zinc-300 rounded-xl flex items-center justify-center'>
             <LineGaph  lineGraphData = { lineGraphData }/>
@@ -121,15 +122,15 @@ function Dash() {
 
 
         {/* NOTE: recent applications */}
-        <div className='bg-white flex flex-col rounded-md'>
+        <div className='bg-white flex-1 flex flex-col min-h-0 rounded-md'>
           <div className='flex items-center justify-between border-b border-zinc-500 p-3 '>
             <h1 className='text-xl font-bold mx-2'>Your recent L's</h1>
-            <a href="#" className='text-blue-700'>see all L's </a>
+            <Link to="/applications" className='text-blue-700'>see all L's </Link>
           </div>
 
           
           {/* list of ls */}
-          <div className='flex flex-col gap-1'>
+          <div className='flex-1 flex flex-col gap-1 overflow-y-auto my-1'>
             {recentTenApplication?.map((val)=>( // not using "sort()" because "reverse()" works better here 
               <RecentAplication key={val._id}  applicationData = {val}/>  
             ))}

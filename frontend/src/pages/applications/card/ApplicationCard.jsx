@@ -11,18 +11,20 @@ export const applicationStatusColors = {
 
 
 
-function ApplicationCard({ applicationData }) {
+function ApplicationCard({ applicationData, setSetshowApplication, onClick }) {
   // console.log(applicationData);
   
   return (
-    <div className='bg-gray-300 h-16 grid grid-cols-8 items-center px-2 rounded-md mx-2 shrink-0 hover:bg-gray-400 cursor-pointer'>
+    <div className='bg-gray-300 h-16 grid grid-cols-8 items-center px-2 rounded-md mx-2 shrink-0 hover:bg-gray-400 cursor-pointer'
+      onClick={onClick}
+    >
       {/* when we use flex then it trys ti shrink the div as much as posible , to prevent that we use "shrink-0" */}
       
       
       {/* role part */}
       <div className='col-span-3 flex items-center pl-2'>
 
-        <div className='bg-gray-500 h-9 w-9 pb-1 flex items-center justify-center rounded-md'>
+        <div className='bg-gray-500 h-9 w-9 pb-0.5 flex items-center justify-center rounded-md'>
           <h1 className='text-xl font-bold text-white'>{applicationData?.companyName?.slice(0, 1).toUpperCase()}</h1>
         </div>
 

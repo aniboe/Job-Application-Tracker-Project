@@ -5,7 +5,7 @@ const imag = "https://png.pngtree.com/png-clipart/20210606/original/pngtree-gray
 
 function SideNav() {
   return (
-    <div className='bg-[#EDECEC] h-screen w-65 border-r border-[#DFDEDE] mx overflow-y-auto'>
+    <div className='bg-[#EDECEC] h-screen w-52 border-r border-[#DFDEDE] mx overflow-y-auto'>
        <div className='mx-4'>
             <div className='text-4xl font-bold text-center pt-5'>
                 <h1 className='text-blue-600'>L Tracker</h1>
@@ -21,10 +21,10 @@ function SideNav() {
                         {/* NOTE: remove all the li's and make it into a saperate component later */}
 
                         <li className='pl-6 h-11 rounded-xl flex  justify-start text-zinc-600 hover:bg-blue-100 hover:text-blue-700'>
-                            <div className='flex items-center'>
+                            <Link to="/dashboard" className='flex items-center'>
                                 <p className='text-lg font-bold' >L</p>
                                 <h1 className='text-lg text-left pl-2'>Dashboard</h1>
-                            </div>
+                            </Link>
                         </li>
  
 
@@ -37,10 +37,10 @@ function SideNav() {
  
 
                         <li className='pl-6 h-11 rounded-xl flex  justify-start text-zinc-600 hover:bg-blue-100 hover:text-blue-700'>
-                            <div className='flex items-center'>
+                            <Link to="/kanban" className='flex items-center'>
                                 <p className='text-lg font-bold' >K</p>
                                 <h1 className='text-lg text-left pl-2'>Kanban Board</h1>
-                            </div>
+                            </Link>
                         </li>
  
 
@@ -56,20 +56,20 @@ function SideNav() {
                     <div>
                         <ul className='flex flex-col gap-1'>
 
-                            <li className='pl-6 h-11 rounded-xl flex  justify-start text-zinc-600 hover:bg-blue-100 hover:text-blue-700'>
+                            <Link to="#" className='pl-6 h-11 rounded-xl flex  justify-start text-zinc-600 hover:bg-blue-100 hover:text-blue-700'>
                                 <div className='flex items-center'>
                                     <p className='text-lg font-bold' >P</p>
                                     <h1 className='text-lg text-left pl-2'>Profile</h1>
                                 </div>
-                            </li>
+                            </Link>
     
 
-                            <li className='pl-6 h-11 rounded-xl flex  justify-start text-zinc-600 hover:bg-blue-100 hover:text-blue-700'>
+                            <Link to="#"className='pl-6 h-11 rounded-xl flex  justify-start text-zinc-600 hover:bg-blue-100 hover:text-blue-700'>
                                 <div className='flex items-center'>
                                     <p className='text-lg font-bold' >S</p>
                                     <h1 className='text-lg text-left pl-2'>Settings</h1>
                                 </div>
-                            </li>
+                            </Link>
     
 
 

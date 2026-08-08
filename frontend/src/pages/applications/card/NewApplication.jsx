@@ -24,7 +24,14 @@ function NewApplication({ setAddApplication }) {
     e.preventDefault()
     try {
         const sendData = await axios.post("http://localhost:4000/api/v1/data/create-application",
-            formData, // dont wrap in {} or else data will be send as nested object (front end expects expects in single object) 
+            {  
+                companyName: formData.companyName.trim(),
+                role: formData.role.trim(),
+                location:  formData.location.trim(),
+                salaryRange: formData.salaryRange.trim(),
+                companyLink: formData.companyLink.trim(),
+                status: formData.status.trim()
+            }, // dont wrap in {} or else data will be send as nested object (front end expects expects in single object) 
             {withCredentials: true})
         
     } catch (error) {
@@ -36,7 +43,7 @@ function NewApplication({ setAddApplication }) {
 
   return (
     <div >
-        <form className='bg-gray-300 rounded-md p-4 h-full stuf-inside flex flex-col ' 
+        <form className='bg-gray-300 rounded-md p-4 h-full flex flex-col ' 
             onSubmit={handleSubmit}
         >
 
@@ -53,7 +60,7 @@ function NewApplication({ setAddApplication }) {
                     <input  className='bg-white text-gray-600 col-span-2 rounded-md border-0 outline-0 h-10 w-80 text-xl pl-2 pb-0.5'  
                         type="text"
                         value={formData.companyName}
-                        onChange={(e) => setFormData({...formData, companyName: e.target.value.trim()})}
+                        onChange={(e) => setFormData({...formData, companyName: e.target.value})}
                         required
                     />
                 </div>
@@ -63,7 +70,7 @@ function NewApplication({ setAddApplication }) {
                     <input  className='bg-white text-gray-600 col-span-2 rounded-md border-0 outline-0 h-10 w-80 text-xl pl-2 pb-0.5'  
                         type="text"
                         value={formData.companyLink}
-                        onChange={(e) => setFormData({...formData, companyLink: e.target.value.trim()})}
+                        onChange={(e) => setFormData({...formData, companyLink: e.target.value})}
                         required
                     />
                 </div>
@@ -73,7 +80,7 @@ function NewApplication({ setAddApplication }) {
                     <input  className='bg-white text-gray-600 col-span-2 rounded-md border-0 outline-0 h-10 w-80 text-xl pl-2 pb-0.5'  
                         type="text"
                         value={formData.location}
-                        onChange={(e) => setFormData({...formData, location: e.target.value.trim()})}
+                        onChange={(e) => setFormData({...formData, location: e.target.value})}
                         required
                     />
                 </div>
@@ -92,7 +99,7 @@ function NewApplication({ setAddApplication }) {
                     <input  className='bg-white text-gray-600 col-span-2 rounded-md border-0 outline-0 h-10 w-80 text-xl pl-2 pb-0.5'  
                         type="text"
                         value={formData.role}
-                        onChange={(e) => setFormData({...formData, role: e.target.value.trim()})}
+                        onChange={(e) => setFormData({...formData, role: e.target.value})}
                         required
                     />
                 </div>
@@ -102,7 +109,7 @@ function NewApplication({ setAddApplication }) {
                     <input  className='bg-white text-gray-600 col-span-2 rounded-md border-0 outline-0 h-10 w-80 text-xl pl-2 pb-0.5'  
                         type="text"
                         value={formData.salaryRange}
-                        onChange={(e) => setFormData({...formData, salaryRange: e.target.value.trim()})}
+                        onChange={(e) => setFormData({...formData, salaryRange: e.target.value})}
                         required
                     />
                 </div>

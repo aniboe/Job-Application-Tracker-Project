@@ -43,7 +43,11 @@ export function Register() {
             
         } catch (error) {
             setErrors(error)
-            console.log(error)
+            // console.log(error.response.data.message)
+            setErrors(error.response.data.message)
+            setTimeout(()=> {
+                setErrors("")
+            },3000)
         }
     }
 
@@ -61,6 +65,7 @@ export function Register() {
                 className=' p-1 rounded-sm h-auto '>
 
                     <div>
+                        <div className='text-red-600 mb-2'>{errors ?? errors}</div>
                         <div className='flex flex-col text-left mb-3'>
 
                             <label className='text-gray-500 text-md '

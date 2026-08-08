@@ -10,15 +10,18 @@ import { LuTextSearch } from "react-icons/lu";
 import { IoIosAdd } from "react-icons/io";
 import ApplicationCard from './card/ApplicationCard.jsx';
 import NewApplication from './card/NewApplication.jsx';
+import ApplicationPopup from './card/ApplicationPopup.jsx';
 
 
 function Application() {
 
   const applicationData = useSelector(allAplications)
   // console.log("is data coming from here: " ,applicationData);
-
+  
   const [addApplication, setAddApplication] = useState(false)
-
+  const [showApplication, setSetshowApplication] = useState(false)
+  const [selectedApplication, setSelectedApplication] = useState({})
+  
   
 
 
@@ -81,7 +84,15 @@ function Application() {
 
           <div className='flex-1 flex flex-col my-1 gap-2 overflow-auto '>
             {applicationData.slice().reverse().map((value) => (
-              <ApplicationCard key={value._id} applicationData={value}/>
+              <ApplicationCard 
+                key={value._id}
+                applicationData={value}
+                // setSetshowApplication={setSetshowApplication}
+                onClick={(e)=> {
+                  setSetshowApplication(true)
+                  setSelectedApplication(value)
+                }}
+              />
             ))}
           </div>
 
@@ -89,9 +100,17 @@ function Application() {
 
       </div>
 
+      {/* Pop up create application form  */}
       {addApplication && (
         <div className='fixed inset-0 flex flex-col items-center justify-center bg-black/55'>
           <NewApplication setAddApplication={setAddApplication} />
+        </div>
+      )}
+
+      {/* pop up show job details  */}
+      {showApplication && (
+        <div className='fixed inset-0 flex flex-col items-center justify-center bg-black/55'>
+          <ApplicationPopup selectedApplication={selectedApplication} />
         </div>
       )}
     </>

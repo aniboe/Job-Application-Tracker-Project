@@ -9,6 +9,7 @@ import Application from './pages/applications/Application.jsx'
 import axios from 'axios'
 import { useDispatch } from "react-redux"
 import { addApplicationData } from './redux/slices/aplicationData.slice.js'
+import NotFound from './pages/not-Found/NotFound.jsx'
 
 function App() {
   const dispatch = useDispatch()
@@ -31,6 +32,7 @@ function App() {
         <Route path='/' element={<Landing/>}/>
         <Route path='/login' element={ <Login/> }/>
         <Route path='/register' element={ <Register/> }/>
+        <Route path='*' element={ <NotFound/> }/>
 
 
 
