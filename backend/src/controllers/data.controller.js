@@ -10,6 +10,14 @@ const addData = asyncHandler(
     async (req, res) => {
         const {companyName, role, location, salaryRange, companyLink, status} = req.body
 
+        console.log("what data am i recieving",req.body);
+        
+
+        const user = req.userData?._id
+        if(!user){
+            throw new ApiError(400, "could not find user")
+        }
+
         // checkif all fields are available 
         if(
             [companyName, role, location, salaryRange, companyLink, status].some((val) => !val || val.trim() === "")
@@ -22,6 +30,7 @@ const addData = asyncHandler(
 
         const addedData = await Data.create(
             {
+                user: user,
                 companyName,
                 role,
                 location,
@@ -50,9 +59,13 @@ const addData = asyncHandler(
 // this controller will be uses until i make a better controller 
 const readAll = asyncHandler(
     async (req, res) => {
+        const user = req.userData?._id
+        if(!user){
+            throw new ApiError(400, "cuould not find user")
+        }
         // fetch whatever data is in the 
 
-        const allAplication = await Data.find()
+        const allAplication = await Data.find({user : user})
 
         if(!allAplication){
             throw new ApiError(400, "there are no applications")
@@ -161,24 +174,38 @@ const statusListProvider = asyncHandler(
         .status(200)
         .json(APPLICATION_STATUS) // not using API responce 
     }
-
 )
 
 const graphData = asyncHandler(
     async (req, res) => {
+        const user = req.userData?._id
+        if(!user){
+            throw new ApiError(400, "cuould not find user")
+        }
 
-        const statusData = await Data.aggregate(
-            [
-                {
-                    $group:{
-                        _id: "$status",
-                        count: {$sum: 1}
-                    }
+        const statusData = await Data.aggregate([
+                
+            {
+                $match: {
+                    user: user // or new mongoose.Types.ObjectId(user) if needed
                 }
-            ]
-        )
+            },
+            {
+
+                $group:{
+                    _id: "$status",
+                    count: {$sum: 1}
+                }
+            }
+                
+        ])
 
         const LineData = await Data.aggregate([
+            {
+                $match: {
+                    user: user // or new mongoose.Types.ObjectId(user) if needed
+                }
+            },
             {
                 $group: {
                 _id: {
@@ -246,8 +273,12 @@ const graphData = asyncHandler(
 
 const allData = asyncHandler(
     async (req, res) => {
+        const user = req.userData?._id
+        if(!user){
+            throw new ApiError(400, "cuould not find user")
+        }
 
-        const allApplicationData = await Data.find()
+        const allApplicationData = await Data.find({user: user})
 
         if(!allApplicationData){
             throw new ApiError(400, "something went wrong while fetching data")

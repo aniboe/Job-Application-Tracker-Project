@@ -18,7 +18,7 @@ export function Login() {
 
     const runMe = async() => {
         try {
-            const applicationData = await axios("http://localhost:4000/api/v1/data/get-all-data", {withCredentials: true})
+            const applicationData = await axios.get("http://localhost:4000/api/v1/data/get-all-data", {withCredentials: true})
             console.log(applicationData);
             
             dispatch(addApplicationData(applicationData?.data))
