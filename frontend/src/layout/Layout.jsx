@@ -1,5 +1,5 @@
 import React from 'react'
-import SideNav from './Sidenav.jsx'
+import SideNav from './SideNav.jsx'
 import TopBar from './TopBar.jsx'
 import { Outlet } from 'react-router-dom'
 
