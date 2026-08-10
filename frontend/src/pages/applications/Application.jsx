@@ -11,16 +11,20 @@ import { IoIosAdd } from "react-icons/io";
 import ApplicationCard from './card/ApplicationCard.jsx';
 import NewApplication from './card/NewApplication.jsx';
 import ApplicationPopup from './card/ApplicationPopup.jsx';
+import EditApplication from './card/EditApplication.jsx';
+import DeleteWarning from './card/DeleteWarning.jsx';
 
 
 function Application() {
 
   const applicationData = useSelector(allAplications)
-  // console.log("is data coming from here: " ,applicationData);
+  // console.log("is data coming from here: ",applicationData);
   
-  const [addApplication, setAddApplication] = useState(false)
-  const [showApplication, setSetshowApplication] = useState(false)
-  const [selectedApplication, setSelectedApplication] = useState({})
+  const [addApplication, setAddApplication] = useState(false) // add new application
+  const [showApplication, setSetshowApplication] = useState(false) // application details popup card
+  const [selectedApplication, setSelectedApplication] = useState({}) // data for aplication popup card to show
+  const [editApplication, setEditApplication] = useState(false) // edit application detail
+  const [showDeleteWarning, setShowDeleteWarning] = useState(false) // shows delete application warning
   
   
 
@@ -102,15 +106,50 @@ function Application() {
 
       {/* Pop up create application form  */}
       {addApplication && (
-        <div className='fixed inset-0 flex flex-col items-center justify-center bg-black/55'>
+        <div className='fixed inset-0 flex flex-col items-center justify-center bg-black/55'
+          onClick={() => setAddApplication(false)}
+        >
           <NewApplication setAddApplication={setAddApplication} />
         </div>
       )}
 
       {/* pop up show job details  */}
       {showApplication && (
-        <div className='fixed inset-0 flex flex-col items-center justify-center bg-black/55'>
-          <ApplicationPopup selectedApplication={selectedApplication} />
+        <div className='fixed inset-0 flex flex-col items-center justify-center bg-black/55'
+          onClick={() => setSetshowApplication(false)}
+        >
+          <ApplicationPopup 
+            selectedApplication={selectedApplication} 
+            setEditApplication={setEditApplication} 
+            setSetshowApplication={setSetshowApplication}
+            setShowDeleteWarning={setShowDeleteWarning}
+          />
+        </div>
+      )}
+
+      {/* edit job details  */}
+      {editApplication && (
+        <div className='fixed inset-0 flex flex-col items-center justify-center bg-black/55'
+          onClick={() => setEditApplication(false)}
+        >
+          <EditApplication 
+            selectedApplication={selectedApplication} 
+            setEditApplication={setEditApplication} 
+            setSetshowApplication={setSetshowApplication}
+          />
+        </div>
+      )}
+
+      {/* delete job applicaion  */}
+      {showDeleteWarning && (
+        <div className='fixed inset-0 flex flex-col items-center justify-center bg-black/55'
+          // onClick={() => setEditApplication(false)}
+        >
+          <DeleteWarning 
+            selectedApplication={selectedApplication} 
+            setShowDeleteWarning={setShowDeleteWarning}  
+            setSetshowApplication={setSetshowApplication}
+          />
         </div>
       )}
     </>

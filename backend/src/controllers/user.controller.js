@@ -143,16 +143,16 @@ const me = asyncHandler(
         const data = await req.userData
         
         // check if value exists
-        if(!data) throw new ApiError(400, "could not find user 🤣")
+        if(!data) throw new ApiError(400, "could not find user ")
 
         // return value
         res
-        .status(400)
+        .status(200)
         .json( new ApiResponce(
             200,
             {
                 _id: data._id,
-                usernmae: data.username,
+                username: data.username,
                 email: data.email                
             },
             ""

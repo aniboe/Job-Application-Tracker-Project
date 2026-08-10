@@ -22,7 +22,7 @@ function RecentAplication({ applicationData }) {
       {/* role part */}
       <div className='col-span-3 flex items-center pl-2'>
 
-        <div className='bg-gray-500 h-9 w-9 flex items-center justify-center rounded-md'>
+        <div className='bg-gray-500 h-9 w-9 pb-0.5 flex items-center justify-center rounded-md'>
           <h1 className='text-xl font-bold text-white'>{applicationData?.companyName?.slice(0, 1)}</h1>
         </div>
 

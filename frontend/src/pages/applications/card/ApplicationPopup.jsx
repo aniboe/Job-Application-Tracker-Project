@@ -1,28 +1,46 @@
 import React from 'react'
 
-function ApplicationPopup({ selectedApplication }) {
+function ApplicationPopup({ selectedApplication, setEditApplication, setSetshowApplication, setShowDeleteWarning }) {
   return (
 
     <>
-        <div className="bg-gray-300 rounded-md p-4 flex flex-col gap-3 w-100">
+        <div className="bg-gray-300 rounded-md p-4 flex flex-col gap-3 w-100"
+            onClick={(e) => e.stopPropagation()}
+        >
     
             {/* Top Section: Header & Edit */}
             <div className="bg-gray-100 flex items-start justify-between p-4 rounded-md">
                 <div>
                     <h2 className="text-2xl font-semibold text-gray-700">
-                        {selectedApplication?.companyName}
+                        {selectedApplication?.role}
                     </h2>
                     <p className="text-gray-500 mt-1 text-sm">
                         {selectedApplication?.createdAt.slice(0, 10)}
                     </p>
                 </div>
 
-                <button
-                    type="button"
-                    className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-3 py-1.5 rounded-md cursor-pointer text-sm font-medium"
-                >
-                    Edit
-                </button>
+                <div className='flex flex-col gap-1'>
+                    <button
+                        type="button"
+                        className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-3 py-1.5 rounded-md cursor-pointer text-sm font-medium"
+                        onClick={() => {
+                            setSetshowApplication(false)
+                            setEditApplication(true)
+                        }}
+                    >
+                        Edit
+                    </button>
+                    <button
+                        type="button"
+                        className="bg-red-500 hover:bg-gray-400 text-gray-700 px-3 py-1.5 rounded-md cursor-pointer text-sm font-medium"
+                        onClick={() => {
+                            setShowDeleteWarning(true)
+                        }}
+                    >
+                        Delete
+                    </button>
+                </div>
+
             </div>
 
             {/* Mid Section: Details Grid */}

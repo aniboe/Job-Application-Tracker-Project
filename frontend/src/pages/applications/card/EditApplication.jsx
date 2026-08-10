@@ -1,30 +1,28 @@
+import React, { useState } from 'react'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
 import { backendUrl } from '../../../App.jsx'
 
-function NewApplication({ setAddApplication }) {
+function EditApplication({ selectedApplication, setEditApplication, setSetshowApplication }) {
 
+    
 
-  const [statusOfApplication, setStatusOfApplication] = useState("Applied")
-
-  const [formData, setFormData] = useState(
-    {
-        companyName: "",
-        role: "",
-        location: "",
-        salaryRange: "",
-        companyLink: "",
-        status: "Applied"
-
-    }
-  )
-
-
+  // Initialize state with the existing application data
+  const [statusOfApplication, setStatusOfApplication] = useState(selectedApplication?.status || "Applied")
+  
+  const [formData, setFormData] = useState({
+      companyName: selectedApplication?.companyName || "",
+      role: selectedApplication?.role || "",
+      location: selectedApplication?.location || "",
+      salaryRange: selectedApplication?.salaryRange || "",
+      companyLink: selectedApplication?.companyLink || "",
+      status: selectedApplication?.status || "Applied"
+  })
 
   const handleSubmit = async(e) => {
     e.preventDefault()
     try {
-        const sendData = await axios.post(`${backendUrl}api/v1/data/create-application`,
+        // Assuming your update route requires the application ID
+        const sendData = await axios.patch(`${backendUrl}/data/update-application/${selectedApplication._id}`,
             {  
                 companyName: formData.companyName.trim(),
                 role: formData.role.trim(),
@@ -32,28 +30,36 @@ function NewApplication({ setAddApplication }) {
                 salaryRange: formData.salaryRange.trim(),
                 companyLink: formData.companyLink.trim(),
                 status: formData.status.trim()
-            }, // dont wrap in {} or else data will be send as nested object (front end expects expects in single object) 
-            {withCredentials: true})
+            }, 
+            {withCredentials: true}
+        )
+        
+        // Close edit modal on success
+        setEditApplication(false)
+        
+        // Optional: you might want to refresh your application list here
         
     } catch (error) {
-        console.error("Error submitting application:", error)
+        console.error("Error updating application:", error)
     }
-    setAddApplication(false)
   }
-
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
-        <form className='bg-gray-300 rounded-md p-4 h-full flex flex-col ' 
+        <form className='bg-gray-300 rounded-md p-4 h-full flex flex-col' 
+            onKeyDown={(e) => {
+                if (e.key === "Enter"){
+                    e.preventDefault()
+                    return
+                }
+            }}
             onSubmit={handleSubmit}
         >
-
-
 
             <div className='bg-gray-100 mb-3 rounded-md px-3 py-2'>
 
                 <h3 className='text-2xl mb-6 text-gray-700 underline'>
-                    Company Details
+                    Edit Company Details
                 </h3>
 
                 <div className='grid grid-cols-3 mb-4 gap-8'>
@@ -92,7 +98,7 @@ function NewApplication({ setAddApplication }) {
             <div className='bg-gray-100 mb-3 rounded-md px-3 py-2'>
 
                 <h3 className='text-2xl mb-6 text-gray-700 underline'>
-                    Job Details
+                    Edit Job Details
                 </h3>
 
                 <div className='grid grid-cols-3 mb-4 gap-8'>
@@ -181,24 +187,23 @@ function NewApplication({ setAddApplication }) {
                 </div>
             </div>
             
-
-
-            
-
             {/* submit or cancel */}
-            <div className='flex gap-7 justify-end'>
+            <div className='flex gap-7 justify-end mt-2'>
                 <button className='bg-amber-700 text-white px-3 py-1 rounded-md cursor-pointer' 
                     type="button"
                     onClick={(e) => {
                         e.preventDefault()
-                        setAddApplication(false)
+                        setEditApplication(false)
+                        // Optionally go back to the details popup when cancelling:
+                        if(setSetshowApplication) setSetshowApplication(true)
                     }}
                 >
-                    cancel
+                    Cancel
                 </button>
-                <button className='bg-blue-600 text-white px-3 py-1 rounded-md cursor-pointer' type="submit">submit</button>
+                <button className='bg-blue-600 text-white px-3 py-1 rounded-md cursor-pointer' type="submit">
+                    Save Changes
+                </button>
             </div>
-
 
         </form>
 
@@ -206,4 +211,4 @@ function NewApplication({ setAddApplication }) {
   )
 }
 
-export default NewApplication
+export default EditApplication

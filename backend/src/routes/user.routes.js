@@ -6,6 +6,6 @@ const userRouter = Router()
 
 userRouter.route("/register").post(registerUser)
 userRouter.route("/login").post(login)
-userRouter.route("/me").post(authenticate ,me)
+userRouter.route("/me").get(authenticate ,me)
 
 export default userRouter
