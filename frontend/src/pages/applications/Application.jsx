@@ -90,7 +90,11 @@ function Application() {
             {applicationData.slice().reverse().map((value) => (
               <ApplicationCard 
                 key={value._id}
+                cardData={value}
+                setSelectedApplication={setSelectedApplication}
                 applicationData={value}
+                setEditApplication={setEditApplication}
+                setShowDeleteWarning={setShowDeleteWarning}
                 // setSetshowApplication={setSetshowApplication}
                 onClick={(e)=> {
                   setSetshowApplication(true)

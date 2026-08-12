@@ -8,6 +8,8 @@ import { APPLICATION_STATUS } from "../constants/statusOptions.js"
 
 const addData = asyncHandler(
     async (req, res) => {
+        console.log("thisis a test",req.body);
+        
         const {companyName, role, location, salaryRange, companyLink, status} = req.body
 
         console.log("what data am i recieving",req.body);

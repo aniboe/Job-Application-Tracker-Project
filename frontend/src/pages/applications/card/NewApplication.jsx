@@ -24,7 +24,7 @@ function NewApplication({ setAddApplication }) {
   const handleSubmit = async(e) => {
     e.preventDefault()
     try {
-        const sendData = await axios.post(`${backendUrl}api/v1/data/create-application`,
+        const sendData = await axios.post(`${backendUrl}/data/create-application`,
             {  
                 companyName: formData.companyName.trim(),
                 role: formData.role.trim(),

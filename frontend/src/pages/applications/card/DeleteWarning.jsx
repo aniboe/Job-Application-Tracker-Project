@@ -14,7 +14,9 @@ function DeleteWarning({ selectedApplication, setShowDeleteWarning, setSetshowAp
         try {
             // Trigger the actual API call to delete the saved ID [cite: 37]
             await axios.delete(`${backendUrl}/data/delete-application/${selectedApplication._id}`, {withCredentials: true});
-            setSetshowApplication(false)
+            
+            if(setShowDeleteWarning) setSetshowApplication(false)
+            
             setShowDeleteWarning(false)
 
             

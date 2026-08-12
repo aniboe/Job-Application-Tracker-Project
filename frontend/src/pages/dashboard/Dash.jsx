@@ -25,7 +25,7 @@ function Dash() {
   
   // this is derived from redux state
   // const recentTenApplication = useSelector(allAplications).slice().reverse().slice(0,10) 
-  const recentTenApplication = useSelector(allAplications).slice(-15).reverse()
+  const recentTenApplication = useSelector(allAplications)?.slice(-15).reverse()
   
 
 

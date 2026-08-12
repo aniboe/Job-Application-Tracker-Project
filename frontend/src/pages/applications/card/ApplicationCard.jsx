@@ -1,4 +1,6 @@
 import React from 'react'
+import { TiDeleteOutline } from "react-icons/ti";
+import { BiEdit } from "react-icons/bi";
 
 
 export const applicationStatusColors = {
@@ -11,7 +13,7 @@ export const applicationStatusColors = {
 
 
 
-function ApplicationCard({ applicationData, setSetshowApplication, onClick }) {
+function ApplicationCard({ applicationData, setSetshowApplication, onClick, setShowDeleteWarning, cardData, setSelectedApplication, setEditApplication}) {
   // console.log(applicationData);
   
   return (
@@ -22,7 +24,7 @@ function ApplicationCard({ applicationData, setSetshowApplication, onClick }) {
       
       
       {/* role part */}
-      <div className='col-span-3 flex items-center pl-2'>
+      <div className='col-span-2 flex items-center pl-2'>
 
         <div className='bg-gray-500 h-9 w-9 pb-0.5 flex items-center justify-center rounded-md'>
           <h1 className='text-xl font-bold text-white'>{applicationData?.companyName?.slice(0, 1).toUpperCase()}</h1>
@@ -57,6 +59,29 @@ function ApplicationCard({ applicationData, setSetshowApplication, onClick }) {
         >
           <h4 className='text-center'>{applicationData?.status}</h4> 
         </div>
+        
+      </div>
+      <div className="col-span-1 flex items-center justify-center gap-3 h-full " 
+        onClick={(e) => e.stopPropagation()}>
+        <button className='bg-blue-500 text-gray-800 p-1 rounded-md h-fit' 
+        type="button"
+        onClick={()=> {
+          setSelectedApplication(cardData)
+          setEditApplication(true)
+        }}
+        >
+          <BiEdit size={25}/>
+        </button>
+
+        <button className='bg-red-500 text-gray-800 p-1 rounded-md h-fit' 
+        type="button"
+        onClick={()=> {
+          setSelectedApplication(cardData)
+          setShowDeleteWarning(true)
+        }}
+        >
+          <TiDeleteOutline size={25}/>
+        </button>
       </div>
     </div>
   )
