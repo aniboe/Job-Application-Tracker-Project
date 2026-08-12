@@ -3,6 +3,7 @@ import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch} from "react-redux"
 import { addApplicationData } from '../../redux/slices/aplicationData.slice'
+import { backendUrl } from '../../App' 
 
 export function Login() {
 
@@ -18,7 +19,7 @@ export function Login() {
 
     const runMe = async() => {
         try {
-            const applicationData = await axios.get("http://localhost:4000/api/v1/data/get-all-data", {withCredentials: true})
+            const applicationData = await axios.get(`${backendUrl}/data/get-all-data`, {withCredentials: true})
             console.log(applicationData);
             
             dispatch(addApplicationData(applicationData?.data))
@@ -30,7 +31,7 @@ export function Login() {
     const submitHandler = async (e) => {
         e.preventDefault()
         try {
-            const sendData = await axios.post("http://localhost:4000/api/v1/user/login", 
+            const sendData = await axios.post(`${backendUrl}/user/login`, 
                 {
                     usernameOrEmail: username.toLocaleLowerCase(),
                     password: password

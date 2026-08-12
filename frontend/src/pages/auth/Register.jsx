@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { backendUrl } from '../../App' 
 
 
 
@@ -26,7 +27,7 @@ export function Register() {
                 // console.log("error lol")
                 throw new Error("Passwords are not the same");
             } 
-            const sendData = await axios.post("http://localhost:4000/api/v1/user/register", 
+            const sendData = await axios.post(`${backendUrl}/user/register`, 
                 {
                     username: username.toLocaleLowerCase(),
                     email: email,

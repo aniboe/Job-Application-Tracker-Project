@@ -11,6 +11,7 @@ import RecentAplication from './cards/RecentAplication'
 import { addApplicationData } from '../../redux/slices/aplicationData.slice.js'
 import { useSelector } from "react-redux"
 import { allAplications } from '../../redux/slices/aplicationData.slice.js'
+import { backendUrl } from '../../App.jsx'
 
 
 
@@ -34,7 +35,7 @@ function Dash() {
 
     const runThis = async() => {
       try {
-        const statusData = await axios.get("http://localhost:4000/api/v1/data/get-graph-data", {withCredentials: true})
+        const statusData = await axios.get(`${backendUrl}/data/get-graph-data`, {withCredentials: true})
         // console.log(statusData.data);
         
         // converting data for CARDS from "{_id: 'Applied', count: 8}" => "{Applied: 8}"
