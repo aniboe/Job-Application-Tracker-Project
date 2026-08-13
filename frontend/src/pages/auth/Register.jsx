@@ -1,7 +1,8 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { backendUrl } from '../../App' 
+import { backendUrl } from '../../App'
+import googleLogo from '../../assets/icons8-google-logo-100.png'
 
 
 
@@ -168,7 +169,7 @@ export function Register() {
                         >
                             <img 
                             className='h-5'
-                            src="src\assets\icons8-google-logo-100.png" alt="" />
+                            src={googleLogo} alt="Google logo" />
                             <h1>Google</h1>
                         </button>
 

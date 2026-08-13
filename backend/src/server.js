@@ -3,12 +3,18 @@ const app = express()
 import cookieParser from "cookie-parser"
 
 import cors from "cors"
-app.use(cors(
-    {
-        origin: process.env.FRONTEND_ORIGN,
-        credentials: true
-    }
-))
+
+const frontendOrigin = process.env.FRONTEND_ORIGIN || process.env.FRONTEND_ORIGN || true
+// when behind a proxy (like Render) and using secure cookies, enable trust proxy
+if(process.env.NODE_ENV === "production"){
+    app.set('trust proxy', 1)
+}
+
+console.log("CORS origin:", frontendOrigin)
+app.use(cors({
+    origin: frontendOrigin,
+    credentials: true
+}))
 
 
 // boiler plae

@@ -3,7 +3,8 @@ import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch} from "react-redux"
 import { addApplicationData } from '../../redux/slices/aplicationData.slice'
-import { backendUrl } from '../../App' 
+import { backendUrl } from '../../App'
+import googleLogo from '../../assets/icons8-google-logo-100.png'
 
 export function Login() {
 
@@ -136,7 +137,7 @@ export function Login() {
                         >
                             <img 
                             className='h-5'
-                            src="src\assets\icons8-google-logo-100.png" alt="" />
+                            src={googleLogo} alt="Google logo" />
                             <h1>Google</h1>
                         </button>
 
