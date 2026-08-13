@@ -47,13 +47,9 @@ const port = process.env.PORT || 3000
 dbConnect()
     .then((value) => {
         // console.log(value) // lots of data
-        app.get("/",(req , res ) => {
-            res.json(`server is runing on http://localhost:${port}/`)
-        })
 
         app.listen(port,() => {
-            console.log(`server is runing on http://localhost:${port}/`);
-            
+            // console.log(`server is runing on http://localhost:${port}/`);
         })
     })
     .catch((err) => {

@@ -30,10 +30,11 @@ app.use("/api/v1/data", dataRouter)
 
 // error handler middleware
 app.use((err, req, res, next) => {
-    console.log(err.message);
+    console.error(err.message);
 
+    const statusCode = err.statuscode || err.status || 500
     return res
-    .status(err.status || 500)
+    .status(statusCode)
     .json(
         {
             success: false,
