@@ -1,28 +1,32 @@
 import React, { useState } from 'react'
 import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch} from "react-redux"
-import { addApplicationData } from '../../redux/slices/aplicationData.slice'
+import { useDispatch, useSelector} from "react-redux"
+import { addApplicationData } from '../../redux/slices/aplicationData.slice.js'
+import { addUserData, userValue } from '../../redux/slices/userData.slice.js'
 import { backendUrl } from '../../App' 
 
 export function Login() {
-
+    const userData = useSelector(userValue)
     const dispatch = useDispatch()
     const Navigate = useNavigate()
+
+    if(userData.username) Navigate("/dashboard") // gigure out how to remove instence of it 
 
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-    const [errors, setErrors] = useState("")
+    const [errors, setErrors] = useState()
 
 
 
     const runMe = async() => {
         try {
             const applicationData = await axios.get(`${backendUrl}/data/get-all-data`, {withCredentials: true})
-            console.log(applicationData);
+            const userData = await axios.get(`${backendUrl}/user/me`, {withCredentials: true})
             
             dispatch(addApplicationData(applicationData?.data))
+            dispatch(addUserData(userData?.data.data))
         } catch (error) {
             console.log("some thing went wrong while fetching data", error.message)
         }

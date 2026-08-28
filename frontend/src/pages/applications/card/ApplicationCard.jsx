@@ -65,7 +65,8 @@ function ApplicationCard({ applicationData, setSetshowApplication, onClick, setS
         onClick={(e) => e.stopPropagation()}>
         <button className='bg-blue-500 text-gray-800 p-1 rounded-md h-fit' 
         type="button"
-        onClick={()=> {
+        onClick={(e)=> {
+          e.stopPropagation()
           setSelectedApplication(cardData)
           setEditApplication(true)
         }}
@@ -75,7 +76,8 @@ function ApplicationCard({ applicationData, setSetshowApplication, onClick, setS
 
         <button className='bg-red-500 text-gray-800 p-1 rounded-md h-fit' 
         type="button"
-        onClick={()=> {
+        onClick={(e)=> {
+          e.stopPropagation()
           setSelectedApplication(cardData)
           setShowDeleteWarning(true)
         }}

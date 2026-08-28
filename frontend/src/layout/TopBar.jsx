@@ -1,70 +1,80 @@
-import React from 'react'
-import { useLocation } from "react-router-dom"
+import React from 'react';
+import { useLocation } from "react-router-dom";
 import { IoIosNotificationsOutline } from "react-icons/io";
-import { useSelector } from "react-redux"
+import { useSelector } from "react-redux";
 import { userValue } from '../redux/slices/userData.slice.js';
 
 function TopBar() {
+    const location = useLocation();
+    const userData = useSelector(userValue);
 
-    const location = useLocation()
-    const userData = useSelector(userValue)
-    
-    
-    const getTitle = (url) => {
-        switch (url) {
+    const getTitle = (path) => {
+        switch (path) {
             case "/dashboard":
-                return "Dashboard"
-                break;
+                return "Dashboard";
             case "/applications":
-                return "Applications"
-                break;
+                return "Applications";
+            case "/kanban":
+                return "Kanban Board";
+            case "/settings":
+                return "Settings";
+            default:
+                return "Overview";
         }
-    }
+    };
+
+    const formattedDate = new Date().toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+    });
 
     return (
-        <div className=' flex h-17 bg-gray-200 mb-2 rounded-md'>
+        <header className="h-16 bg-white border-b border-zinc-200 px-6 flex items-center justify-between">
+            {/* Page Title & Date */}
+            <div>
+                <h1 className="text-lg font-semibold text-zinc-900 leading-tight">
+                    {getTitle(location.pathname)}
+                </h1>
+                <p className="text-xs text-zinc-400 font-medium">
+                    {formattedDate}
+                </p>
+            </div>
 
-            <div className='w-full mx-9 my-3 flex items-center justify-between'>
+            {/* Right Controls */}
+            <div className="flex items-center gap-4">
+                {/* Notification Icon */}
+                <button
+                    type="button"
+                    className="p-2 rounded-lg text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 transition-colors relative"
+                    title="Notifications"
+                >
+                    <IoIosNotificationsOutline size={22} />
+                </button>
 
-                <div className='w-full flex justify-between items-center flex-1'>
-                    
-                    <div className=' bg-[#E8E7E7] flex items-center cursor-not-allowed px-3 rounded-xl'>
+                <div className="h-6 w-px bg-zinc-200" />
 
-                        {/* <img src="" alt="" /> */}
-
-                        <div>
-                            <h1 className='text-2xl font-bold'>{getTitle(location.pathname)}</h1>
-                            <p>{ new Date().toDateString() }</p>
-                        </div>
-                        
-                    </div>
-
-                    <div>
-                        <IoIosNotificationsOutline  size={24}/>
-                    </div>
-                </div>
-
-                
-                <div className='h-full border-l m-3 '/>
-
-
-                <div className='flex items-center min-w-24 gap-2'>
-                    <div className='h-11 w-11 bg bg-blue-500 text-white rounded-full'>
-                        { userData ? (
-                            <div className=''>
-                                <img src="https://imgs.search.brave.com/ayKjcLkcL42SwKfHeGx88UTR16QEd12JFng24-54OEk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvdGh1bWJu/YWlsL2RlZmF1bHQt/cHJvZmlsZS1waWN0/dXJlLXBsYWNlaG9s/ZGVyLXFjb2ZtaGg0/bmNvcG03OG0ud2Vi/cA" alt="" />
-                            </div>
+                {/* User Profile */}
+                <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-full overflow-hidden flex items-center justify-center bg-zinc-100 border border-zinc-200 text-sm font-semibold text-zinc-700 select-none">
+                        {userData?.avatar ? (
+                            <img 
+                                src={userData.avatar} 
+                                alt={userData?.username || "Avatar"} 
+                                className="h-full w-full object-cover"
+                            />
                         ) : (
-                            <div className=' h-full flex items-center justify-center'>
-                                <h1>{ userData?.username.slice(0, 1).toUpperCase() }</h1>
-                            </div>
+                            <span>{userData?.username?.charAt(0).toUpperCase() || "U"}</span>
                         )}
                     </div>
-                    <h3 className='text-xl'>{ userData?.username }</h3>
+                    
+                    <span className="text-sm font-medium text-zinc-700 hidden sm:block">
+                        {userData?.username || "Guest"}
+                    </span>
                 </div>
             </div>
-        </div>
-    )
+        </header>
+    );
 }
 
-export default TopBar
+export default TopBar;

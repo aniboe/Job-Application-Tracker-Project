@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'
 import { backendUrl } from '../../../App.jsx'
 import { useSelector, useDispatch } from "react-redux"
@@ -8,7 +8,8 @@ import { allAplications, addApplicationData } from '../../../redux/slices/aplica
 
 
 function DeleteWarning({ selectedApplication, setShowDeleteWarning, setSetshowApplication }) {
-    // console.log( "here ?:", useSelector(allAplications));
+    const dispatch = useDispatch()
+    const reduxApplicaionData = useSelector(allAplications)
 
     const handleConfirmDelete = async () => {
         try {
@@ -18,24 +19,14 @@ function DeleteWarning({ selectedApplication, setShowDeleteWarning, setSetshowAp
             if(setShowDeleteWarning) setSetshowApplication(false)
             
             setShowDeleteWarning(false)
+            const updatedStateAfterDeletion = reduxApplicaionData.filter((val) => val._id !== selectedApplication._id && val)
 
-            
-            // // Optionally close the main details modal as well since the application is now gone
-            // if (setSetshowApplication) {
-            //     setSetshowApplication(false);
-            // }
-            
-            // Note: You might also want to trigger a state update here 
-            // to remove the application from your main list UI.
+            dispatch(addApplicationData(updatedStateAfterDeletion))
 
 
         } catch (error) {
             console.error("Failed to delete:", error)
         }
-        //  finally {
-        //     // Once the API returns, hide the modal [cite: 38]
-        //     setShowDeleteWarning(false);
-        // }
     };
 
     return (

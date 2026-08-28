@@ -31,7 +31,7 @@ function Application() {
 
   return (
     <>
-      <div className="flex flex-col w-full h-full p-3 gap-2 bg-gray-200 ">
+      <div className="flex flex-col w-full h-full gap-2 ">
 
         {/* TopBar */}
         <div className='h-10 flex items-center rounded-md'>
@@ -62,7 +62,9 @@ function Application() {
             {/* add application */}
             <div className='h-full '>
               <button className='h-full flex items-center gap-1 bg-blue-500 text-white pl-2 pr-3 rounded-md text-[17px]'
-                onClick={() => setAddApplication(true)}
+                onClick={() => {
+                  setAddApplication(true)
+                }}
               >
                 <IoIosAdd size={24}/>
                 <h4>Add</h4>
@@ -87,7 +89,7 @@ function Application() {
 
 
           <div className='flex-1 flex flex-col my-1 gap-2 overflow-auto '>
-            {applicationData.slice().reverse().map((value) => (
+            {applicationData?.slice().reverse().map((value) => (
               <ApplicationCard 
                 key={value._id}
                 cardData={value}
@@ -140,6 +142,8 @@ function Application() {
             selectedApplication={selectedApplication} 
             setEditApplication={setEditApplication} 
             setSetshowApplication={setSetshowApplication}
+            showApplication={showApplication}
+            setSelectedApplication={setSelectedApplication}
           />
         </div>
       )}

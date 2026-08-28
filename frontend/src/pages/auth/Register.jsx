@@ -2,12 +2,17 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { backendUrl } from '../../App' 
+import { userValue } from '../../redux/slices/userData.slice'
+import { useSelector } from 'react-redux'
 
 
 
 export function Register() {
 
     const Navigate = useNavigate()
+    const userData = useSelector(userValue)
+
+    if(userData.username) Navigate("/dashboard")
 
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
@@ -25,7 +30,11 @@ export function Register() {
         try {
             if(password1 !== password2){
                 // console.log("error lol")
-                throw new Error("Passwords are not the same");
+                setErrors("password are not matched")
+                setTimeout(() => {
+                    setErrors("")
+                }, 3000);
+                return
             } 
             const sendData = await axios.post(`${backendUrl}/user/register`, 
                 {
@@ -45,7 +54,7 @@ export function Register() {
         } catch (error) {
             setErrors(error)
             // console.log(error.response.data.message)
-            setErrors(error.response.data.message)
+            setErrors(error.response?.data.message)
             setTimeout(()=> {
                 setErrors("")
             },3000)

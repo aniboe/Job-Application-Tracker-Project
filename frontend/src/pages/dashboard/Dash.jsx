@@ -58,7 +58,7 @@ function Dash() {
 
 
   return (
-    <div className='h-full flex flex-col gap-3 bg-gray-200 p-3 overflow-hidden'>
+    <div className='h-full flex flex-col gap-3 overflow-hidden'>
       {/* remove height so that it can cover as much as cild allows */}
 
 

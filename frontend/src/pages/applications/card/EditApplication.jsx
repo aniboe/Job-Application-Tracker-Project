@@ -2,7 +2,13 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { backendUrl } from '../../../App.jsx'
 
-function EditApplication({ selectedApplication, setEditApplication, setSetshowApplication }) {
+import { useSelector, useDispatch } from 'react-redux'
+import { allAplications, addApplicationData } from '../../../redux/slices/aplicationData.slice.js'
+
+function EditApplication({ selectedApplication, setEditApplication, setSetshowApplication, showApplication, setSelectedApplication }) {
+
+    const dispatch = useDispatch()
+    const reduxApplicationData = useSelector(allAplications)
 
     
 
@@ -21,16 +27,17 @@ function EditApplication({ selectedApplication, setEditApplication, setSetshowAp
   const handleSubmit = async(e) => {
     e.preventDefault()
     try {
+        const data = {  
+            companyName: formData.companyName.trim(),
+            role: formData.role.trim(),
+            location:  formData.location.trim(),
+            salaryRange: formData.salaryRange.trim(),
+            companyLink: formData.companyLink.trim(),
+            status: formData.status.trim()
+        }
         // Assuming your update route requires the application ID
         const sendData = await axios.patch(`${backendUrl}/data/update-application/${selectedApplication._id}`,
-            {  
-                companyName: formData.companyName.trim(),
-                role: formData.role.trim(),
-                location:  formData.location.trim(),
-                salaryRange: formData.salaryRange.trim(),
-                companyLink: formData.companyLink.trim(),
-                status: formData.status.trim()
-            }, 
+            data, 
             {withCredentials: true}
         )
         
@@ -38,6 +45,21 @@ function EditApplication({ selectedApplication, setEditApplication, setSetshowAp
         setEditApplication(false)
         
         // Optional: you might want to refresh your application list here
+        const updatedApplicationAfterEditedApplication = reduxApplicationData.map((val) => {
+            if(val._id === selectedApplication._id) {
+                const updatedObj ={
+                    ...val,
+                    ...data
+                }
+                setSelectedApplication(updatedObj)
+                return updatedObj
+
+            }return val
+        })
+        // console.log(updatedApplicationAfterEditedApplication);
+        
+        dispatch(addApplicationData(updatedApplicationAfterEditedApplication))
+        
         
     } catch (error) {
         console.error("Error updating application:", error)
@@ -195,7 +217,7 @@ function EditApplication({ selectedApplication, setEditApplication, setSetshowAp
                         e.preventDefault()
                         setEditApplication(false)
                         // Optionally go back to the details popup when cancelling:
-                        if(setSetshowApplication) setSetshowApplication(true)
+                        if(showApplication) setSetshowApplication(true)
                     }}
                 >
                     Cancel

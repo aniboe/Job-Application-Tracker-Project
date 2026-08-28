@@ -24,7 +24,7 @@ function ApplicationPopup({ selectedApplication, setEditApplication, setSetshowA
                         type="button"
                         className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-3 py-1.5 rounded-md cursor-pointer text-sm font-medium"
                         onClick={() => {
-                            setSetshowApplication(false)
+                            // setSetshowApplication(false) // closes the application detail oppup everytime
                             setEditApplication(true)
                         }}
                     >

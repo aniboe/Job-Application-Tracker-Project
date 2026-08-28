@@ -21,9 +21,13 @@ const UserSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        pic: {
+        avatar: {
             type: String,
-        }
+        },
+        publicId: {
+            type: String,
+        },
+        
     },
     {timestamps: true}
 )
