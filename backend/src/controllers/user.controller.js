@@ -10,7 +10,7 @@ import { Data } from "../models/data.model.js"
 
 const cookieOptions = {
     httpOnly: true,
-    secure: false,
+    secure: process.env.NODE_ENV === "production" ? true : false,
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days { cookies disapear after pc restarts thats why to check , might be some other issue}
     // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // same thing but diffrent syntax
