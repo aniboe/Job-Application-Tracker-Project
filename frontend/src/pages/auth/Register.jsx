@@ -4,9 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { userValue } from '../../redux/slices/userData.slice';
 import { IoAlertCircle } from "react-icons/io5";
-import { backendUrl } from '../../App';
-import googleLogo from '../../assets/icons8-google-logo-100.png';
-
 
 export function Register() {
   const navigate = useNavigate();
@@ -64,8 +61,6 @@ export function Register() {
           <p className="text-xs text-zinc-500 mt-1">
             Start tracking your job applications in one place
           </p>
-        </div>
-
         </div>
 
         {/* Error Notification */}
