@@ -6,7 +6,7 @@ import Layout from './layout/Layout'
 import Dash from './pages/dashboard/Dash'
 import Landing from './pages/landing/Landing'
 import Application from './pages/applications/Application.jsx'
-import axios from 'axios'
+import { api } from './main.jsx'
 import { useDispatch } from "react-redux"
 import { addApplicationData } from './redux/slices/aplicationData.slice.js'
 import { addUserData } from './redux/slices/userData.slice.js'
@@ -17,7 +17,7 @@ import Setting from './pages/settings/Setting.jsx'
 //  this function calles the application and used in more then one place i gues 
 export const getApplications = async(dispatchInstance) => {
   try {
-    const allData = await axios.get(`/data/get-all-data`)
+    const allData = await api.get(`/data/get-all-data`)
     dispatchInstance(addApplicationData(allData?.data))
   } catch (error) {
     console.error("Error fetching applications:", error)
@@ -34,7 +34,7 @@ function App() {
       await getApplications(dispatch) // passing dispatch inside outer function because it doesnt have acces to it 
       
       try {
-        const userData = await axios.get(`/user/me`)
+        const userData = await api.get(`/user/me`)
         
         dispatch(addUserData(userData?.data.data))
       } catch (error) {

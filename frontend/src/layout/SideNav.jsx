@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { TbLayoutSidebarRightExpand, TbLayoutSidebarLeftExpand } from "react-icons/tb";
 import { MdSpaceDashboard, MdListAlt, MdViewKanban, MdLogout } from "react-icons/md";
 import { IoMdSettings } from 'react-icons/io';
-import axios from 'axios';
+import { api } from '../main';
 
 function SideNav() {
     const [isCollapsed, setIsCollapsed] = useState(true);
@@ -11,7 +11,7 @@ function SideNav() {
 
     const handleLogout = async () => {
         try {
-            await axios.post(`/user/logout`,);
+            await api.post(`/user/logout`,);
             navigate("/");
         } catch (error) {
             console.error("Logout failed:", error);

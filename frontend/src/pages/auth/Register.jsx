@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { api } from '../../main';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { userValue } from '../../redux/slices/userData.slice';
@@ -35,7 +35,7 @@ export function Register() {
     setLoading(true);
 
     try {
-      await axios.post(`/user/register`,
+      await api.post(`/user/register`,
         {
           username: username.trim().toLowerCase(),
           email: email.trim(),

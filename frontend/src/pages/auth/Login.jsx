@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { api } from '../../main.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addApplicationData } from '../../redux/slices/aplicationData.slice.js';
@@ -26,8 +26,8 @@ export function Login() {
   const fetchAppData = async () => {
     try {
       const [applicationsRes, userRes] = await Promise.all([
-        axios.get(`/data/get-all-data`),
-        axios.get(`/user/me`),
+        api.get(`/data/get-all-data`),
+        api.get(`/user/me`),
       ]);
 
       dispatch(addApplicationData(applicationsRes?.data));
@@ -43,7 +43,7 @@ export function Login() {
     setLoading(true);
 
     try {
-      await axios.post(`/user/login`,
+      await api.post(`/user/login`,
         {
           usernameOrEmail: username.trim().toLowerCase(),
           password: password,

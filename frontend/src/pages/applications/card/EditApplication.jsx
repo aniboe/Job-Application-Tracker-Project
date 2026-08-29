@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { api } from '../../../main.jsx';
 import { useSelector, useDispatch } from 'react-redux';
 import { allAplications, addApplicationData } from '../../../redux/slices/aplicationData.slice.js';
 import { LuX } from 'react-icons/lu';
@@ -47,7 +47,7 @@ function EditApplication({
         status: formData.status,
       };
 
-      await axios.patch(`/data/update-application/${selectedApplication._id}`, payload )
+      await api.patch(`/data/update-application/${selectedApplication._id}`, payload )
 
       const updatedList = reduxApplicationData.map((val) => {
         if (val._id === selectedApplication._id) {

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import axios from "axios";
+import { api } from "../../main.jsx";
 import { LuX, LuUpload, LuTrash2, LuLock, LuUser, LuMail } from "react-icons/lu";
 import { TbAlertTriangleFilled } from "react-icons/tb";
 import { useSelector, useDispatch } from "react-redux";
@@ -67,7 +67,7 @@ function Setting() {
       const formData = new FormData();
       formData.append("avatar", e.target.files[0]);
 
-      const res = await axios.put(`/user/add-avatar`, formData);
+      const res = await api.put(`/user/add-avatar`, formData);
       dispatch(addUserData(res?.data?.data));
     } catch (error) {
       console.error(error);
@@ -81,7 +81,7 @@ function Setting() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await axios.put(`/user/remove-avatar`, {});
+      const res = await api.put(`/user/remove-avatar`, {});
       dispatch(addUserData(res?.data?.data));
     } catch (error) {
       console.error(error);
@@ -95,7 +95,7 @@ function Setting() {
     e.preventDefault();
     try {
       setLoading(true);
-      await axios.post(`/user/update-username`, { newUserName: newUsername.trim() });
+      await api.post(`/user/update-username`, { newUserName: newUsername.trim() });
       dispatch(addUserData({ ...userData, username: newUsername.trim() }));
       setShowUsernameModal(false);
     } catch (error) {
@@ -109,7 +109,7 @@ function Setting() {
     e.preventDefault();
     try {
       setLoading(true);
-      await axios.post(`/user/update-email`, { newUserEmail: newEmail.trim()});
+      await api.post(`/user/update-email`, { newUserEmail: newEmail.trim()});
       dispatch(addUserData({ ...userData, email: newEmail.trim() }));
       setShowEmailModal(false);
     } catch (error) {
@@ -127,7 +127,7 @@ function Setting() {
     }
     try {
       setLoading(true);
-      await axios.post(`/user/update-password`,
+      await api.post(`/user/update-password`,
         { currentPassword, confirmPassword },
       );
       setShowPasswordModal(false);
@@ -142,7 +142,7 @@ function Setting() {
     e.preventDefault();
     try {
       setLoading(true);
-      await axios.post(`/user/delete-account`, { password: deletePassword });
+      await api.post(`/user/delete-account`, { password: deletePassword });
       dispatch(addUserData(null));
       setShowDeleteModal(false);
       navigate("/");

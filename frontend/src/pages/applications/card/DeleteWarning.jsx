@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { api } from '../../../main.jsx';
 import { useSelector, useDispatch } from "react-redux";
 import { allAplications, addApplicationData } from '../../../redux/slices/aplicationData.slice.js';
 import { LuTrash2 } from 'react-icons/lu';
@@ -13,7 +13,7 @@ function DeleteWarning({ selectedApplication, setShowDeleteWarning, setSetshowAp
   const handleConfirmDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/data/delete-application/${selectedApplication._id}`)
+      await api.delete(`/data/delete-application/${selectedApplication._id}`)
 
       const updatedState = reduxApplicationData.filter(
         (val) => val._id !== selectedApplication._id

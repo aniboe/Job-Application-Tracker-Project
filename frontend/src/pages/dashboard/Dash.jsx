@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { api } from '../../main.jsx';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import LineGaph from './chart/LineGaph';
@@ -26,7 +26,7 @@ function Dash() {
   useEffect(() => {
     const fetchDashboardMetrics = async () => {
       try {
-        const response = await axios.get(`/data/get-graph-data`);
+        const response = await api.get(`/data/get-graph-data`);
 
         const properObjectData = (response.data?.statusAndBarGraphData || []).reduce(
           (acc, { _id, count }) => {

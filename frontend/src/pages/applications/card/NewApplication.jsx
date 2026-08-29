@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { api } from '../../../main.jsx';
 import { getApplications } from '../../../App.jsx';
 import { useDispatch } from 'react-redux';
 import { LuX } from 'react-icons/lu';
@@ -31,7 +31,7 @@ function NewApplication({ setAddApplication }) {
     e.preventDefault();
     try {
       setLoading(true);
-      await axios.post(`/data/create-application`,
+      await api.post(`/data/create-application`,
         {
           companyName: formData.companyName.trim(),
           role: formData.role.trim(),

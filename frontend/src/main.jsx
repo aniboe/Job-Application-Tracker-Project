@@ -13,12 +13,15 @@ import { Provider } from "react-redux"
 
 import axios from 'axios'
 
-axios.create(
+export const api = axios.create(
   {
     baseURL: import.meta.env.VITE_BACKEND_URL,
     withCredentials: true
   }
 )
+
+console.log("this is the shit: ",import.meta.env.VITE_BACKEND_URL);
+
 
 createRoot(document.getElementById('root')).render(
   
