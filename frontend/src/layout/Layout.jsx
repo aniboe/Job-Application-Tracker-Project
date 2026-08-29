@@ -1,25 +1,27 @@
-import React from 'react'
-import SideNav from './SideNav.jsx'
-import TopBar from './TopBar.jsx'
-import { Outlet } from 'react-router-dom'
+import React from 'react';
+import SideNav from './SideNav.jsx';
+import TopBar from './TopBar.jsx';
+import { Outlet } from 'react-router-dom';
 
-
-function Laout() {
+function Layout() {
   return (
-    <>
-      <div className='h-screen flex overflow-hidden'>
-        <SideNav/>
+    <div className="h-screen flex bg-zinc-50 overflow-hidden font-sans text-zinc-900">
+      {/* Sidebar Navigation */}
+      <SideNav />
 
-        <div className='flex flex-col flex-1 m-1'>
-          <TopBar/>
+      {/* Main Content Area */}
+      <div className="flex flex-col flex-1 min-w-0">
+        <TopBar />
 
-          <div className='flex flex-col flex-1 overflow-auto rounded-md '>
-            <Outlet/>
+        {/* Dynamic Route Content */}
+        <main className="flex-1 overflow-y-auto p-6">
+          <div className="max-w-7xl mx-auto w-full">
+            <Outlet />
           </div>
-        </div>
+        </main>
       </div>
-    </>
-  )
+    </div>
+  );
 }
 
-export default Laout
+export default Layout;

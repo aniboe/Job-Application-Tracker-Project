@@ -4,13 +4,16 @@ import { ApiResponce } from "../utility/ApiResponse.js"
 import { User } from "../models/user.models.js"
 import mongoose from "mongoose"
 import JWT from "jsonwebtoken"
+import { uploadOnCloudinary, deleteFromCloudinary } from "../utility/cloudinary.js"
+import { Data } from "../models/data.model.js"
 
 
 const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days { cookies disapear after pc restarts thats why to check , might be some other issue}
+    // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // same thing but diffrent syntax
 }
 
 const registerUser = asyncHandler(
@@ -137,6 +140,22 @@ const login = asyncHandler(
     }
 )
 
+const logout = asyncHandler(
+    async (req, res) => {
+        const user = req.userData
+        if(!user) throw new ApiError(400, "here? invalid token")
+        
+        res
+        .status(200)
+        .clearCookie("accessToken", cookieOptions)
+        .json( new ApiResponce(
+            200,
+            "",
+            "user successfully logged out"
+        ))
+    }
+)
+
 const me = asyncHandler(
     async (req, res) => {
         // get user data from athnticator
@@ -153,15 +172,226 @@ const me = asyncHandler(
             {
                 _id: data._id,
                 username: data.username,
-                email: data.email                
+                avatar: data.avatar,
+                email: data.email,
+                publicId: data.publicId,
             },
             ""
         ))
     }
 )
 
+const addAvatar = asyncHandler(
+    async (req, res) => {
+
+        const user = req.userData
+        if(!user) throw new ApiError(400, "invalid user")
+
+        const localPath = req.file?.path
+        if(!localPath) throw new ApiError(400, "could not find image in server")
+            
+        const cloudinaryResponse = await uploadOnCloudinary(localPath)
+        if(!cloudinaryResponse) throw new ApiError(400, "something went wrong while uploading to cloudinary")
+
+        const updateAvatar = await User.findByIdAndUpdate(
+            user._id,
+            {
+                avatar: cloudinaryResponse.secure_url,
+                publicId: cloudinaryResponse.public_id
+            },
+            {new: true}
+        ).select("-password")
+        
+        res
+        .status(200)
+        .json(new ApiResponce(
+            200,
+            updateAvatar,
+            "avatar has been updated successfully"
+        ))
+    }
+)
+
+const removeAvatar = asyncHandler(
+    async (req, res) => {
+
+        const user = req.userData
+        if(!user) throw new ApiError(400, "invalid user")
+        
+    
+        // learn how to remove image from cloudinary
+        const isRemovedFromCloudinary = await deleteFromCloudinary(user.publicId)
+        // console.log(isRemovedFromCloudinary);
+        if(!isRemovedFromCloudinary) throw new ApiError("something went wrong while removing image from cloudinary");
+
+        const updateAvatar = await User.findByIdAndUpdate(
+            user._id,
+            {
+                avatar: "",
+                publicId: "",
+            },
+            {new: true}
+        ).select("-password")
+        
+        res
+        .status(200)
+        .json(new ApiResponce(
+            200,
+            updateAvatar,
+            "avatar has been updated successfully"
+        ))
+    }
+)
+
+const updatUserName = asyncHandler(
+    async (req, res) => {
+        const user = req.userData
+        if(!user) throw new ApiError(400, "invalid token")
+
+        const newUserName = req.body?.newUserName
+
+        // console.log(newUserName);
+        
+        if(!newUserName) throw new ApiError(400, "please enter username")
+
+        const checkUser = await User.findOne({username: newUserName})
+        if(checkUser) throw new ApiError(400, "username not avalable")
+        
+        const updateUserName = await User.findByIdAndUpdate(
+            user._id,
+            {
+                username: newUserName
+            },
+            {new: true}
+        ).select("-password -avatar -createdAt -updatedAt -__v -email")
+        if(!updateUserName) throw new ApiError(400, "something went wrong while updating username")
+
+        res
+        .status(200)
+        .json( new ApiResponce(
+            200,
+            updateUserName,
+            "username updated successfully"
+        ))
+    }
+)
+
+const updatUserEmail = asyncHandler(
+    async (req, res) => {
+        const user = req.userData
+        if(!user) throw new ApiError(400, "invalid token")
+
+        const newUserEmail = req.body?.newUserEmail
+
+        // console.log(newUserEmail);
+        
+        if(!newUserEmail) throw new ApiError(400, "please enter an email")
+
+        const checkEmail = await User.findOne({email: newUserEmail})
+        if(checkEmail) throw new ApiError(400, "email already in use")
+        
+        const updateUserEmail = await User.findByIdAndUpdate(
+            user._id,
+            {
+                email: newUserEmail
+            },
+            {new: true}
+        ).select("-password -avatar -createdAt -updatedAt -__v -username")
+        if(!updateUserEmail) throw new ApiError(400, "something went wrong while updating email")
+
+        res
+        .status(200)
+        .json( new ApiResponce(
+            200,
+            updateUserEmail,
+            "username updated successfully"
+        ))
+    }
+)
+
+const updatUserPassword = asyncHandler(
+    async (req, res) => {
+        const user = req.userData
+        if(!user) throw new ApiError(400, "invalid token")
+
+        const { currentPassword, confirmPassword } = req.body
+        
+        if(!currentPassword || !confirmPassword ) throw new ApiError(400, "All fields are required")
+
+        const findUserDetail = await User.findById(user._id).select("password")
+        
+
+        const isPasswordCorrect = await findUserDetail.isPasswordCorrect(currentPassword)
+        
+
+        if(!isPasswordCorrect) throw new ApiError(400, "invalid password")
+        
+        // const updateUserPassword = await User.findByIdAndUpdate( // this doessnt hash password because doesnt initiate "pre(save)" hook
+        //     user._id,
+        //     {
+        //         password: confirmPassword
+        //     },
+        //     {new: true}
+        // ).select(" -avatar -createdAt -updatedAt -__v -username -email")
+        
+        // updatinf this way
+        findUserDetail.password = confirmPassword 
+        const updateUserPassword = await findUserDetail.save() // this way initiats save hook
+        if(!updateUserPassword) throw new ApiError(400, "something went wrong while updating password")
+
+        res
+        .status(200)
+        .json( new ApiResponce(
+            200,
+            updateUserPassword,
+            "password updated successfully"
+        ))
+    }
+)
+
+const deleteAccount = asyncHandler(
+    async (req, res) => {
+        // get user data 
+        // remove user and data from data base using userid
+        const user = req.userData
+        if(!user) throw new ApiError(400, "invalid token")
+            
+        const { password } = req.body
+        if(!password) throw new ApiError(400, "please enter your password")
+            
+        const userData = await User.findById(user._id)
+        if(!userData) throw new ApiError(400, "could not find user")
+            
+        const isPasswordCorrect = await userData.isPasswordCorrect(password)
+        if(!isPasswordCorrect) throw new ApiError(400, "wrong password")
+
+        const deleteUser = await User.findByIdAndDelete(user._id)
+        const deleteApplications = await Data.deleteMany({user: user._id})
+        // if(!deleteUser || !deleteApplications) throw new ApiError(400, "account data deleted successfully") // !deleteApplications is always false — deleteMany returns { deletedCount: 0 } which is a truthy object
+        if(!deleteUser || !deleteApplications.deletedCount === 0 ) throw new ApiError(400, "something went wrong while deleting account details") 
+        res
+        .status(200)
+        .json(new ApiResponce(
+            200,
+            {
+                deleteUser,
+                deleteApplications
+            },
+            "account deleted successfully"
+        ))
+        
+    }
+)
+
 export {
     registerUser,
     login,
-    me
+    logout,
+    me,
+    addAvatar,
+    removeAvatar,
+    updatUserName,
+    updatUserEmail,
+    updatUserPassword,
+    deleteAccount
 }

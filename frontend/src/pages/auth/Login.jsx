@@ -3,128 +3,140 @@ import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch} from "react-redux"
 import { addApplicationData } from '../../redux/slices/aplicationData.slice'
-import { backendUrl } from '../../App'
-import googleLogo from '../../assets/icons8-google-logo-100.png'
+import { backendUrl } from '../../App' 
 
 export function Login() {
+  const userData = useSelector(userValue);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const dispatch = useDispatch()
-    const Navigate = useNavigate()
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-    const [errors, setErrors] = useState("")
-
-
-
-    const runMe = async() => {
-        try {
-            const applicationData = await axios.get(`${backendUrl}/data/get-all-data`, {withCredentials: true})
-            console.log(applicationData);
-            
-            dispatch(addApplicationData(applicationData?.data))
-        } catch (error) {
-            console.log("some thing went wrong while fetching data", error.message)
-        }
+  // Safely redirect if already authenticated
+  useEffect(() => {
+    if (userData?.username) {
+      navigate('/dashboard');
     }
+  }, [userData, navigate]);
 
-    const submitHandler = async (e) => {
-        e.preventDefault()
-        try {
-            const sendData = await axios.post(`${backendUrl}/user/login`, 
-                {
-                    usernameOrEmail: username.toLocaleLowerCase(),
-                    password: password
-                },
-                {withCredentials: true}
-            )
-            setUsername("")
-            setPassword("")
-            
-            runMe()
-            Navigate("/dashboard")
-        } catch (error) {
-            // console.log(error.response.data.message)
-            setErrors(error.response.data.message)
-            setTimeout(()=> {
-                setErrors("")
-            },3000)
-        }
-    } 
+  const fetchAppData = async () => {
+    try {
+      const [applicationsRes, userRes] = await Promise.all([
+        axios.get(`/data/get-all-data`),
+        axios.get(`/user/me`),
+      ]);
+
+      dispatch(addApplicationData(applicationsRes?.data));
+      dispatch(addUserData(userRes?.data?.data));
+    } catch (err) {
+      console.error('Failed to sync data after login:', err.message);
+    }
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      await axios.post(`/user/login`,
+        {
+          usernameOrEmail: username.trim().toLowerCase(),
+          password: password,
+        });
+
+      await fetchAppData();
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err?.response?.data?.message || 'Invalid username or password');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <>
-        <div className='h-screen w-full flex justify-center items-center'>
-            <div className='bg-[#F1F0F0] flex flex-col p-6 rounded-2xl text-center min-h-110 min-w-96 relative drop-shadow-2xl'>
+    <div className="min-h-screen w-full flex items-center justify-center bg-zinc-50 px-4 py-8">
+      <div className="w-full max-w-sm bg-white rounded-xl border border-zinc-200 shadow-sm p-8">
+        {/* Brand / Title Header */}
+        <div className="mb-6">
+          <h1 className="text-xl font-semibold text-zinc-900 tracking-tight">
+            Welcome back
+          </h1>
+          <p className="text-xs text-zinc-500 mt-1">
+            Enter your credentials to access your tracker
+          </p>
+        </div>
 
-                <h1 className=' text-3xl font-bold mb-4'>
-                    Login
-                </h1>
+        {/* Error Alert */}
+        {error && (
+          <div className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200/80 flex items-center gap-2 text-xs text-rose-700">
+            <IoAlertCircle className="text-base shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
 
-                <form
-                onSubmit={submitHandler} 
-                className=' p-1 rounded-sm h-auto '>
+        {/* Form */}
+        <form onSubmit={submitHandler} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium text-zinc-700">
+              Username or Email
+            </label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              required
+              className="h-9 px-3 rounded-lg border border-zinc-200 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-400 transition-colors shadow-2xs"
+              placeholder="e.g. alex@example.com"
+            />
+          </div>
 
-                    <div className='text-red-600 mb-2'>{errors ?? errors}</div>
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-zinc-700">
+                Password
+              </label>
+              <button
+                type="button"
+                className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors cursor-not-allowed"
+                title="Password recovery is currently unavailable"
+              >
+                Forgot?
+              </button>
+            </div>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+              className="h-9 px-3 rounded-lg border border-zinc-200 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-400 transition-colors shadow-2xs"
+              placeholder="••••••••"
+            />
+          </div>
 
-                    <div>
-                        <div className='flex flex-col text-left mb-3'>
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-2 h-9 w-full rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium transition-colors shadow-xs cursor-pointer disabled:opacity-50"
+          >
+            {loading ? 'Signing in...' : 'Sign in'}
+          </button>
+        </form>
 
-                            <label className='text-gray-500 text-md '
-                            htmlFor=""
-                            >
-                                Username
-                            </label>
-
-                            <input 
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className='rounded-lg h-10 border border-gray-200 outline-0 text-xl text-zinc-600 px-2' 
-                            type="text"
-                            autoComplete='username'
-                            required 
-                            />
-                        </div>
-
-                        <div className='flex flex-col text-left mb-3'>
-
-                            <label className='text-gray-500 text-md '
-                            htmlFor=""
-                            >
-                                Password
-                            </label>
-
-                            <input 
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className='rounded-lg h-10 border border-gray-200 outline-0 text-xl text-zinc-600 px-2' 
-                            type="password"
-                            autoComplete='current-password'
-                            required
-                            />
-                        </div>
-                    </div>
-                    
-                    <div className='text-right text-zinc-500 text-[15px] hover:underline'>
-                        <a className='cursor-not-allowed' href="#">forgot password?</a>
-                    </div>
-
-                    <div className='w-full   mt-5'>
-                        <button type='submit'
-                        className='bg-blue-800 text-white w-full pt-2 pb-2 rounded-xl'>login</button>
-                    </div>
-                </form>
-
-
-
-                <div className='my-4 mx-1 relative flex items-center justify-center'>
-                    <hr className='w-full border-gray-400 border rounded-2xl'/>
-                    <span
-                    className='text-xl absolute bg-[#F1F0F0] px-2 mb-1.5'
-                    >
-                        or
-                    </span>
-                </div>
+        {/* Divider */}
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-zinc-100" />
+          </div>
+          <div className="relative flex justify-center text-xs">
+            <span className="bg-white px-2 text-zinc-400">or</span>
+          </div>
+        </div>
 
 
 
@@ -137,24 +149,23 @@ export function Login() {
                         >
                             <img 
                             className='h-5'
-                            src={googleLogo} alt="Google logo" />
+                            src="src\assets\icons8-google-logo-100.png" alt="" />
                             <h1>Google</h1>
                         </button>
 
-                    </div>
-
-                    
-
-                </div>
-
-                <div className='text-right text-zinc-500 text-[15px] mt-4'>
-                    <Link to="/register">Not registered ? <span className='text-blue-800 hover:underline'>register here</span></Link>
-                </div>
-
-            </div>
+        {/* Footer Link */}
+        <div className="mt-6 text-center text-xs text-zinc-500">
+          Don&apos;t have an account?{' '}
+          <Link
+            to="/register"
+            className="font-medium text-zinc-900 hover:underline underline-offset-4"
+          >
+            Create one
+          </Link>
         </div>
-    </>
-  )
+      </div>
+    </div>
+  );
 }
 
-export default Login
+export default Login;

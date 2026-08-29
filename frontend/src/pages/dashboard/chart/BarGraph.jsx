@@ -1,67 +1,79 @@
-import { useEffect, useState } from "react";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import React, { useMemo } from 'react';
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  Cell,
+} from 'recharts';
 
+const CATEGORIES = [
+  { key: 'Applied', color: '#3B82F6' },
+  { key: 'Interview', color: '#F59E0B' },
+  { key: 'Offer', color: '#8B5CF6' },
+  { key: 'Accepted', color: '#10B981' },
+  { key: 'Rejected', color: '#F43F5E' },
+];
 
+function CustomTooltip({ active, payload }) {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-white px-3 py-1.5 rounded-lg border border-zinc-200 shadow-sm text-xs">
+        <span className="font-medium text-zinc-700">{data.category}:</span>{' '}
+        <span className="font-semibold text-zinc-900">{data.value}</span>
+      </div>
+    );
+  }
+  return null;
+}
 
-
-function BarGraph({ barGraphData }) {
-
-    const [barGraph, setBarGraph] = useState([
-        { category: "Applied", value: 0 },
-        { category: "Interview", value: 0 },
-        { category: "Rejected", value: 0 },
-        { category: "Offer", value: 0 },
-        { category: "Accepted", value: 0 },
-    ])
-
-    useEffect(() => {
-        // take the object of data and update based on that
-        // console.log("this i prams value ", barGraphData);
-        
-        const data = barGraph?.map((val) => (
-                {
-                    ...val,
-                    value: barGraphData[[val.category]] ?? val.value
-                }
-            ))
-        // console.log("this is data",data)
-        setBarGraph(data)
-
-    }, [barGraphData]);
+function BarGraph({ barGraphData = {} }) {
+  const chartData = useMemo(() => {
+    return CATEGORIES.map(({ key, color }) => ({
+      category: key,
+      value: barGraphData[key] ?? 0,
+      color,
+    }));
+  }, [barGraphData]);
 
   return (
     <div className="h-full w-full">
-        {/* <ResponsiveContainer>
-            <BarChart data={chartData}>
-                <YAxis dataKey={Applied, Interview, Rejected, Offered}/>
-                <Bar />
-            </BarChart>
-        </ResponsiveContainer> */}
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={chartData}
+          layout="vertical"
+          margin={{ top: 8, right: 24, left: 4, bottom: 8 }}
+          barSize={14}
+        >
+          {/* Categories Label */}
+          <YAxis
+            type="category"
+            dataKey="category"
+            width={72}
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: '#71717A', fontSize: 12 }}
+          />
 
+          {/* Hidden Values Axis */}
+          <XAxis type="number" axisLine={false} tickLine={false} hide />
 
-        <ResponsiveContainer>
-            <BarChart data={barGraph} layout="vertical" margin={{ top: 10, right: 20, left: -20, bottom: 10 }}>
-                <CartesianGrid strokeDasharray="3 3" />
+          {/* Minimal Tooltip */}
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: '#F4F4F5', opacity: 0.6 }} />
 
-                {/* Categories */}
-                <YAxis type="category" dataKey="category" width={100}    axisLine={false} tickLine={false}/>
-
-                {/* Values (uses a diffrent div for that which shows number in bront of bar)*/}
-                <XAxis type="number"   axisLine={false} tickLine={false}   hide/> 
-
-                {/* <XAxis type="number"  // hide the number but its space is not used by bars(stays reserved)
-                    tick={false}      // hides numbers
-                    axisLine={false}  // hides axis line
-                    tickLine={false}  // hides tick marks
-                /> */}
-
-                <Tooltip />
-                <Bar dataKey="value" fill="#3b82f6" radius={[0, 6, 6, 0]}/>
-            </BarChart>
-        </ResponsiveContainer>
-
+          {/* Subtle Dynamic Status Colored Bars */}
+          <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+            {chartData.map((entry) => (
+              <Cell key={entry.category} fill={entry.color} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
     </div>
-  )
+  );
 }
 
-export default BarGraph
+export default BarGraph;

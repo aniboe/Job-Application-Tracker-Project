@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
-import { Route, Routes } from "react-router-dom"
+import { Route, Routes, useNavigate } from "react-router-dom"
 import Layout from './layout/Layout'
 import Dash from './pages/dashboard/Dash'
 import Landing from './pages/landing/Landing'
@@ -11,21 +11,36 @@ import { useDispatch } from "react-redux"
 import { addApplicationData } from './redux/slices/aplicationData.slice.js'
 import { addUserData } from './redux/slices/userData.slice.js'
 import NotFound from './pages/not-Found/NotFound.jsx'
+import Setting from './pages/settings/Setting.jsx'
 
-export const backendUrl = import.meta.env.VITE_BACKEND_URL
+
+//  this function calles the application and used in more then one place i gues 
+export const getApplications = async(dispatchInstance) => {
+  try {
+    const allData = await axios.get(`/data/get-all-data`)
+    dispatchInstance(addApplicationData(allData?.data))
+  } catch (error) {
+    console.error("Error fetching applications:", error)
+  }
+}
+
 
 function App() {
   const dispatch = useDispatch()
+  const Navigate = useNavigate()
 
   useEffect(() => {
     const runThis = async () => {
-      const allData = await axios.get(`${backendUrl}/data/get-all-data`, {withCredentials: true})
-      // console.log("redux lol:",allData.data);
-      dispatch(addApplicationData(allData?.data))
+      await getApplications(dispatch) // passing dispatch inside outer function because it doesnt have acces to it 
       
-      const userData = await axios.get(`${backendUrl}/user/me`, {withCredentials: true})
-      // console.log("redux user",userData.data.data);
-      dispatch(addUserData(userData?.data.data))
+      try {
+        const userData = await axios.get(`/user/me`)
+        
+        dispatch(addUserData(userData?.data.data))
+      } catch (error) {
+        console.error("user not authenticated");
+        Navigate("/")
+      }
     }
     runThis()
     
@@ -33,6 +48,10 @@ function App() {
 
   return (
     <>
+    <div className='w-full h-10 bg-red-200 flex items-center justify-center'>
+      <h1 className='text-red-500 text-xl font-semibold'>This site is Under Progress</h1>
+    </div>
+
       <Routes>
 
         {/* Public routes */}
@@ -56,6 +75,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dash/>} />
           <Route path="/applications" element={<Application/>} />
+          <Route path="/settings" element={<Setting/>} />
         </Route>
 
       </Routes>
