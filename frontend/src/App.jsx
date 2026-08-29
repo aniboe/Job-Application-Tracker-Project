@@ -13,12 +13,11 @@ import { addUserData } from './redux/slices/userData.slice.js'
 import NotFound from './pages/not-Found/NotFound.jsx'
 import Setting from './pages/settings/Setting.jsx'
 
-export const backendUrl = import.meta.env.VITE_BACKEND_URL
 
 //  this function calles the application and used in more then one place i gues 
 export const getApplications = async(dispatchInstance) => {
   try {
-    const allData = await axios.get(`${backendUrl}/data/get-all-data`, { withCredentials: true })
+    const allData = await axios.get(`/data/get-all-data`)
     dispatchInstance(addApplicationData(allData?.data))
   } catch (error) {
     console.error("Error fetching applications:", error)
@@ -35,7 +34,7 @@ function App() {
       await getApplications(dispatch) // passing dispatch inside outer function because it doesnt have acces to it 
       
       try {
-        const userData = await axios.get(`${backendUrl}/user/me`, {withCredentials: true})
+        const userData = await axios.get(`/user/me`)
         
         dispatch(addUserData(userData?.data.data))
       } catch (error) {
@@ -49,6 +48,10 @@ function App() {
 
   return (
     <>
+    <div className='w-full h-10 bg-red-200 flex items-center justify-center'>
+      <h1 className='text-red-500 text-xl font-semibold'>This site is Under Progress</h1>
+    </div>
+
       <Routes>
 
         {/* Public routes */}

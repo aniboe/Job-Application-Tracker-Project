@@ -1,146 +1,125 @@
-import React from 'react'
-import axios from "axios"
-import { Link } from "react-router-dom"
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import LineGaph from './chart/LineGaph';
+import BarGraph from './chart/BarGraph';
+import RecentAplication from './cards/RecentAplication';
+import { allAplications } from '../../redux/slices/aplicationData.slice.js';
+import { LuArrowRight } from 'react-icons/lu';
 
-import LineGaph from './chart/LineGaph'
-import BarGraph from './chart/BarGraph'
-import { useEffect } from 'react'
-import { useState } from 'react'
-import RecentAplication from './cards/RecentAplication'
-
-import { addApplicationData } from '../../redux/slices/aplicationData.slice.js'
-import { useSelector } from "react-redux"
-import { allAplications } from '../../redux/slices/aplicationData.slice.js'
-import { backendUrl } from '../../App.jsx'
-
-
-
+const METRIC_CARDS = [
+  { key: 'Applied', label: 'Applied', accent: 'text-blue-600 bg-blue-50 border-blue-100' },
+  { key: 'Interview', label: 'Interview', accent: 'text-amber-600 bg-amber-50 border-amber-100' },
+  { key: 'Offer', label: 'Offer', accent: 'text-purple-600 bg-purple-50 border-purple-100' },
+  { key: 'Accepted', label: 'Accepted', accent: 'text-emerald-600 bg-emerald-50 border-emerald-100' },
+  { key: 'Rejected', label: 'Rejected', accent: 'text-rose-600 bg-rose-50 border-rose-100' },
+];
 
 function Dash() {
+  const [cardStatusCount, setCardStatusCount] = useState({});
+  const [lineGraphData, setLineGraphData] = useState([]);
 
-  // xdont need this line because "recentTenApplication" is derived from redix state
-  // const [recentApplications, setRecentApplications] = useState([]) 
-  const [cardStatusCount, setCardStatusCount] = useState({})
-  const [lineGraphData, setLineGraphData] = useState([])
+  const rawApplications = useSelector(allAplications) || [];
+  const recentTenApplication = rawApplications.slice(-10).reverse();
 
-  
-  // this is derived from redux state
-  // const recentTenApplication = useSelector(allAplications).slice().reverse().slice(0,10) 
-  const recentTenApplication = useSelector(allAplications)?.slice(-15).reverse()
-  
-
-
-  // get status count
   useEffect(() => {
-
-    const runThis = async() => {
+    const fetchDashboardMetrics = async () => {
       try {
-        const statusData = await axios.get(`${backendUrl}/data/get-graph-data`, {withCredentials: true})
-        // console.log(statusData.data);
-        
-        // converting data for CARDS from "{_id: 'Applied', count: 8}" => "{Applied: 8}"
-        const properObjectData = statusData.data.statusAndBarGraphData.reduce((acc,{_id, count}) => {
-          acc[_id] = count
-          return acc
-        }, {})
-        
-        // setRecentApplications(recentTenApplication) // this has to be done outside sinde data is being recieved from redux not this api
-        setLineGraphData(statusData?.data.lineGraphData)
-        setCardStatusCount(properObjectData)
-        
-      }
-      catch (error) {
-        console.log("somethig went : ",error); // later pass it into error State
-      }
-    }
-    runThis()
-  },[])
+        const response = await axios.get(`/data/get-graph-data`);
 
+        const properObjectData = (response.data?.statusAndBarGraphData || []).reduce(
+          (acc, { _id, count }) => {
+            acc[_id] = count;
+            return acc;
+          },
+          {}
+        );
+
+        setLineGraphData(response.data?.lineGraphData || []);
+        setCardStatusCount(properObjectData);
+      } catch (error) {
+        console.error('Failed to load dashboard metrics:', error);
+      }
+    };
+
+    fetchDashboardMetrics();
+  }, []);
 
   return (
-    <div className='h-full flex flex-col gap-3 overflow-hidden'>
-      {/* remove height so that it can cover as much as cild allows */}
-
-
-
-      {/*NOTE: information part of the page (have to convert into individual components) */}
-
-      <div className='h-full flex flex-col gap-3'>
-
-        <div className='h-20 grid grid-cols-10 gap-3 shrink-0'>
-        
-          <div className=' bg-gray-300 col-span-2 p-4 rounded-xl'>
-            <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Applied  || "null"}</h1>
-            <p className=''>Applied</p>
+    <div className="flex flex-col gap-5 pb-6">
+      {/* Metric Counters Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+        {METRIC_CARDS.map(({ key, label, accent }) => (
+          <div
+            key={key}
+            className="bg-white rounded-xl border border-zinc-200 p-4 shadow-2xs flex flex-col justify-between"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-zinc-500">{label}</span>
+              <span className={`h-2 w-2 rounded-full ${accent.split(' ')[1]}`} />
+            </div>
+            <p className="text-2xl font-semibold text-zinc-900 mt-2 tracking-tight">
+              {cardStatusCount[key] ?? 0}
+            </p>
           </div>
+        ))}
+      </div>
 
-          
-          <div className=' bg-gray-300 col-span-2 p-4 rounded-xl'>
-            <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Interview  || "null"}</h1>
-            <p className=''>Interview</p>
+      {/* Analytics Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div className="lg:col-span-7 bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs">
+          <div className="mb-4">
+            <h2 className="text-sm font-semibold text-zinc-900">Application Activity</h2>
+            <p className="text-xs text-zinc-400">Applications submitted over time</p>
           </div>
-
-          
-          <div className=' bg-gray-300 col-span-2 p-4 rounded-xl'>
-            <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Offer  || "null"}</h1>
-            <p className=''>Offer</p>
-          </div>
-
-          
-          <div className=' bg-gray-300 col-span-2 p-4 rounded-xl'>
-            <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Rejected || "null"}</h1>
-            <p className=''>Rejected</p>
-          </div>
-
-
-          <div className=' bg-gray-300 col-span-2 p-4 rounded-xl'>
-            <h1 className='text-xl font-bold text-gray-700'>{cardStatusCount.Accepted  || "null"}</h1>
-            <p className=''>Accepted</p>
-          </div>
-          
-        </div>
-        
-        
-
-
-
-
-
-        {/*NOTE: graph part */}
-        <div className='h-80 grid grid-cols-12 gap-7 shrink-0'>
-
-          <div className='p-4 col-span-7 bg-zinc-300 rounded-xl flex items-center justify-center'>
-            <LineGaph  lineGraphData = { lineGraphData }/>
-          </div>
-
-          <div className='p-4 col-span-5 bg-zinc-300
-           rounded-xl flex items-center justify-center'>
-            <BarGraph   barGraphData = { cardStatusCount }/>
+          <div className="h-64 flex items-center justify-center">
+            <LineGaph lineGraphData={lineGraphData} />
           </div>
         </div>
 
-
-
-
-        {/* NOTE: recent applications */}
-        <div className='bg-white flex-1 flex flex-col min-h-0 rounded-md'>
-          <div className='flex items-center justify-between border-b border-zinc-500 p-3 '>
-            <h1 className='text-xl font-bold mx-2'>Your recent L's</h1>
-            <Link to="/applications" className='text-blue-700'>see all L's </Link>
+        <div className="lg:col-span-5 bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs">
+          <div className="mb-4">
+            <h2 className="text-sm font-semibold text-zinc-900">Status Distribution</h2>
+            <p className="text-xs text-zinc-400">Current stage breakdown</p>
           </div>
-
-          
-          {/* list of ls */}
-          <div className='flex-1 flex flex-col gap-1 overflow-y-auto my-1'>
-            {recentTenApplication?.map((val)=>( // not using "sort()" because "reverse()" works better here 
-              <RecentAplication key={val._id}  applicationData = {val}/>  
-            ))}
+          <div className="h-64 flex items-center justify-center">
+            <BarGraph barGraphData={cardStatusCount} />
           </div>
         </div>
+      </div>
 
+      {/* Recent Applications Section */}
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-2xs overflow-hidden flex flex-col">
+        <div className="px-5 py-4 border-b border-zinc-100 flex items-center justify-between">
+          <div>
+            <h2 className="text-sm font-semibold text-zinc-900">Recent Applications</h2>
+            <p className="text-xs text-zinc-400">Latest updates on your active submissions</p>
+          </div>
+          <Link
+            to="/applications"
+            className="inline-flex items-center gap-1 text-xs font-medium text-zinc-700 hover:text-zinc-950 transition-colors"
+          >
+            <span>View all</span>
+            <LuArrowRight size={13} />
+          </Link>
+        </div>
+
+        {/* List Content */}
+        <div className="divide-y divide-zinc-100">
+          {recentTenApplication.length > 0 ? (
+            recentTenApplication.map((val) => (
+              <RecentAplication key={val._id} applicationData={val} />
+            ))
+          ) : (
+            <div className="py-12 text-center text-xs text-zinc-400">
+              No recent applications recorded yet
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Dash
+export default Dash;

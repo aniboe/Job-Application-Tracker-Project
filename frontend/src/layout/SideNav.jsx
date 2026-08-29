@@ -4,15 +4,14 @@ import { TbLayoutSidebarRightExpand, TbLayoutSidebarLeftExpand } from "react-ico
 import { MdSpaceDashboard, MdListAlt, MdViewKanban, MdLogout } from "react-icons/md";
 import { IoMdSettings } from 'react-icons/io';
 import axios from 'axios';
-import { backendUrl } from '../App';
 
 function SideNav() {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
     const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
-            await axios.post(`${backendUrl}/user/logout`, {}, { withCredentials: true });
+            await axios.post(`/user/logout`,);
             navigate("/");
         } catch (error) {
             console.error("Logout failed:", error);
@@ -51,9 +50,9 @@ function SideNav() {
                         >
                             {/* Shows expand right when collapsed, expand left when open */}
                             {isCollapsed ? (
-                                <TbLayoutSidebarRightExpand className="text-xl" />
-                            ) : (
                                 <TbLayoutSidebarLeftExpand className="text-xl" />
+                            ) : (
+                                <TbLayoutSidebarRightExpand className="text-xl" />
                             )}
                         </button>
                     </div>

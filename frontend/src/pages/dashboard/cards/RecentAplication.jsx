@@ -1,63 +1,55 @@
-import React from 'react'
+import React from 'react';
 
-
-export const applicationStatusColors = {
-  Applied: "#3B82F6",    // Blue
-  Interview: "#F59E0B",  // Amber
-  Offer: "#8B5CF6",      // Purple
-  Rejected: "#EF4444",   // Red
-  Accepted: "#22C55E",   // Green
+const STATUS_STYLES = {
+  Applied: 'bg-blue-50 text-blue-700 border-blue-200/60',
+  Interview: 'bg-amber-50 text-amber-700 border-amber-200/60',
+  Offer: 'bg-purple-50 text-purple-700 border-purple-200/60',
+  Rejected: 'bg-rose-50 text-rose-700 border-rose-200/60',
+  Accepted: 'bg-emerald-50 text-emerald-700 border-emerald-200/60',
 };
 
-
-
 function RecentAplication({ applicationData }) {
-  // console.log(applicationData);
-  
+  const statusClass =
+    STATUS_STYLES[applicationData?.status] ||
+    'bg-zinc-100 text-zinc-700 border-zinc-200';
+
   return (
-    <div className='bg-gray-300 h-16 grid grid-cols-8 items-center px-2 rounded-md mx-2 shrink-0 hover:bg-gray-400 cursor-pointer'>
-      {/* when we use flex then it trys ti shrink the div as much as posible , to prevent that we use "shrink-0" */}
-      
-      
-      {/* role part */}
-      <div className='col-span-3 flex items-center pl-2'>
-
-        <div className='bg-gray-500 h-9 w-9 pb-0.5 flex items-center justify-center rounded-md'>
-          <h1 className='text-xl font-bold text-white'>{applicationData?.companyName?.slice(0, 1)}</h1>
+    <div className="grid grid-cols-12 gap-4 items-center px-5 py-3 hover:bg-zinc-50/75 transition-colors">
+      {/* Role & Company */}
+      <div className="col-span-5 flex items-center gap-3 min-w-0">
+        <div className="h-9 w-9 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center text-sm font-semibold text-zinc-700 shrink-0 select-none">
+          {applicationData?.companyName?.charAt(0).toUpperCase() || 'C'}
         </div>
-
-        <div className='pl-3 pt-1'>
-          <div className='text-xl font-bold leading-4'>{applicationData?.role}</div>
-          <div className='text-sm font-bold text-gray-500'>{applicationData?.companyName}</div>
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-zinc-900 truncate">
+            {applicationData?.role || 'Untitled Role'}
+          </p>
+          <p className="text-xs text-zinc-500 truncate">
+            {applicationData?.companyName || 'Unknown Company'}
+          </p>
         </div>
-
       </div>
 
-
-      {/* location part */}
-      <div className='col-span-2 text-[17px] text-gray-500'>
-        {applicationData?.location}
+      {/* Location */}
+      <div className="col-span-3 text-sm text-zinc-600 truncate">
+        {applicationData?.location || '—'}
       </div>
 
-      {/* salary range */}
-      <div className='col-span-1 text-md text-gray-500'>
-        {applicationData?.salaryRange}
+      {/* Date */}
+      <div className="col-span-2 text-xs text-zinc-400">
+        {applicationData?.createdAt?.slice(0, 10) || '—'}
       </div>
 
-      {/* date part */}
-      <div className='col-span-1 text-gray-500 text-center'>{applicationData?.createdAt?.slice(0, 10)}</div>
-
-      {/* status part */}
-      <div className=' ml-2 flex justify-center'>
-        <div
-          className={`col-span-1 w-fit px-2 py-1.5 rounded-md text-gray-800 font-semibold`}  
-          style={{backgroundColor: applicationStatusColors[applicationData?.status]}}  // dunamic style changes doesnt work in tailwind so have to do in notmal style way
+      {/* Status Badge */}
+      <div className="col-span-2 flex justify-end">
+        <span
+          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusClass}`}
         >
-          <h4 className='text-center'>{applicationData?.status}</h4> 
-        </div>
+          {applicationData?.status || 'Draft'}
+        </span>
       </div>
     </div>
-  )
+  );
 }
 
-export default RecentAplication
+export default RecentAplication;

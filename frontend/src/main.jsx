@@ -8,6 +8,15 @@ import { BrowserRouter } from "react-router-dom"
 import { store } from './redux/store/store.js'
 import { Provider } from "react-redux"
 
+import axios from 'axios'
+
+axios.create(
+  {
+    baseURL: import.meta.env.VITE_BACKEND_URL,
+    withCredentials: true
+  }
+)
+
 createRoot(document.getElementById('root')).render(
   
   <StrictMode>

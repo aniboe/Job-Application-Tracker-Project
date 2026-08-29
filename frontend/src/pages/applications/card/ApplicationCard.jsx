@@ -1,92 +1,100 @@
-import React from 'react'
-import { TiDeleteOutline } from "react-icons/ti";
-import { BiEdit } from "react-icons/bi";
+import React from 'react';
+import { LuPencil, LuTrash2 } from 'react-icons/lu';
 
-
-export const applicationStatusColors = {
-  Applied: "#3B82F6",    // Blue
-  Interview: "#F59E0B",  // Amber
-  Offer: "#8B5CF6",      // Purple
-  Rejected: "#EF4444",   // Red
-  Accepted: "#22C55E",   // Green
+// Minimal pill palette with soft backgrounds and matching foregrounds
+const STATUS_STYLES = {
+  Applied: 'bg-blue-50 text-blue-700 border-blue-200/60',
+  Interview: 'bg-amber-50 text-amber-700 border-amber-200/60',
+  Offer: 'bg-purple-50 text-purple-700 border-purple-200/60',
+  Rejected: 'bg-rose-50 text-rose-700 border-rose-200/60',
+  Accepted: 'bg-emerald-50 text-emerald-700 border-emerald-200/60',
 };
 
+function ApplicationCard({
+  applicationData,
+  onClick,
+  setShowDeleteWarning,
+  cardData,
+  setSelectedApplication,
+  setEditApplication,
+}) {
+  const data = applicationData || cardData;
+  const statusClass =
+    STATUS_STYLES[data?.status] || 'bg-zinc-100 text-zinc-700 border-zinc-200';
 
-
-function ApplicationCard({ applicationData, setSetshowApplication, onClick, setShowDeleteWarning, cardData, setSelectedApplication, setEditApplication}) {
-  // console.log(applicationData);
-  
   return (
-    <div className='bg-gray-300 h-16 grid grid-cols-8 items-center px-2 rounded-md mx-2 shrink-0 hover:bg-gray-400 cursor-pointer'
+    <div
       onClick={onClick}
+      className="group grid grid-cols-12 gap-4 items-center px-5 py-3 hover:bg-zinc-50 transition-colors cursor-pointer"
     >
-      {/* when we use flex then it trys ti shrink the div as much as posible , to prevent that we use "shrink-0" */}
-      
-      
-      {/* role part */}
-      <div className='col-span-2 flex items-center pl-2'>
-
-        <div className='bg-gray-500 h-9 w-9 pb-0.5 flex items-center justify-center rounded-md'>
-          <h1 className='text-xl font-bold text-white'>{applicationData?.companyName?.slice(0, 1).toUpperCase()}</h1>
+      {/* Role & Company */}
+      <div className="col-span-5 flex items-center gap-3 min-w-0">
+        <div className="h-9 w-9 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center text-sm font-semibold text-zinc-700 shrink-0 select-none">
+          {data?.companyName?.charAt(0).toUpperCase() || 'C'}
         </div>
-
-        <div className='pl-3 pt-1'>
-          <div className='text-xl font-bold leading-4'>{applicationData?.role}</div>
-          <div className='text-sm font-bold text-gray-500'>{applicationData?.companyName}</div>
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-zinc-900 truncate">
+            {data?.role || 'Untitled Role'}
+          </p>
+          <p className="text-xs text-zinc-500 truncate">
+            {data?.companyName || 'Unknown Company'}
+          </p>
         </div>
-
       </div>
 
-
-      {/* location part */}
-      <div className='col-span-2 text-[17px] text-gray-500'>
-        {applicationData?.location}
+      {/* Location */}
+      <div className="col-span-3 text-sm text-zinc-600 truncate">
+        {data?.location || '—'}
       </div>
 
-      {/* salary range */}
-      <div className='col-span-1 text-md text-gray-500'>
-        {applicationData?.salaryRange}
+      {/* Salary */}
+      <div className="col-span-2 text-sm text-zinc-600 truncate">
+        {data?.salaryRange || '—'}
       </div>
 
-      {/* date part */}
-      <div className='col-span-1 text-gray-500 text-center'>{applicationData?.createdAt?.slice(0, 10)}</div>
+      {/* Status & Actions */}
+      <div className="col-span-2 flex items-center justify-end gap-2">
+        {/* Status Badge */}
+        <span
+          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusClass}`}
+        >
+          {data?.status || 'Draft'}
+        </span>
 
-      {/* status part */}
-      <div className=' ml-2 flex justify-center'>
+        {/* Action Buttons (Subtle on hover) */}
         <div
-          className={`col-span-1 w-fit px-2 py-1.5 rounded-md text-gray-800 font-semibold`}  
-          style={{backgroundColor: applicationStatusColors[applicationData?.status]}}  // dunamic style changes doesnt work in tailwind so have to do in notmal style way
+          className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={(e) => e.stopPropagation()}
         >
-          <h4 className='text-center'>{applicationData?.status}</h4> 
-        </div>
-        
-      </div>
-      <div className="col-span-1 flex items-center justify-center gap-3 h-full " 
-        onClick={(e) => e.stopPropagation()}>
-        <button className='bg-blue-500 text-gray-800 p-1 rounded-md h-fit' 
-        type="button"
-        onClick={(e)=> {
-          e.stopPropagation()
-          setSelectedApplication(cardData)
-          setEditApplication(true)
-        }}
-        >
-          <BiEdit size={25}/>
-        </button>
+          <button
+            type="button"
+            title="Edit"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedApplication(data);
+              setEditApplication(true);
+            }}
+            className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded-md transition-colors"
+          >
+            <LuPencil size={15} />
+          </button>
 
-        <button className='bg-red-500 text-gray-800 p-1 rounded-md h-fit' 
-        type="button"
-        onClick={(e)=> {
-          e.stopPropagation()
-          setSelectedApplication(cardData)
-          setShowDeleteWarning(true)
-        }}
-        >
-          <TiDeleteOutline size={25}/>
-        </button>
+          <button
+            type="button"
+            title="Delete"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedApplication(data);
+              setShowDeleteWarning(true);
+            }}
+            className="p-1.5 text-zinc-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
+          >
+            <LuTrash2 size={15} />
+          </button>
+        </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ApplicationCard
+export default ApplicationCard;

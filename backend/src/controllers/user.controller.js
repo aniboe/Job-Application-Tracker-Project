@@ -10,7 +10,7 @@ import { Data } from "../models/data.model.js"
 
 const cookieOptions = {
     httpOnly: true,
-    secure: false,
+    secure: process.env.NODE_ENV === "production",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days { cookies disapear after pc restarts thats why to check , might be some other issue}
     // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // same thing but diffrent syntax
 }
@@ -361,7 +361,7 @@ const deleteAccount = asyncHandler(
         const userData = await User.findById(user._id)
         if(!userData) throw new ApiError(400, "could not find user")
             
-        const isPasswordCorrect = userData.isPasswordCorrect(userData.password)
+        const isPasswordCorrect = await userData.isPasswordCorrect(password)
         if(!isPasswordCorrect) throw new ApiError(400, "wrong password")
 
         const deleteUser = await User.findByIdAndDelete(user._id)
