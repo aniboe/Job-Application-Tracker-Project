@@ -20,7 +20,7 @@ export const api = axios.create(
   }
 )
 
-console.log("this is the shit: ",import.meta.env.VITE_BACKEND_URL);
+
 
 
 createRoot(document.getElementById('root')).render(

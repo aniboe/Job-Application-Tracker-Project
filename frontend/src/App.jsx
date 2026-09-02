@@ -12,6 +12,7 @@ import { addApplicationData } from './redux/slices/aplicationData.slice.js'
 import { addUserData } from './redux/slices/userData.slice.js'
 import NotFound from './pages/not-Found/NotFound.jsx'
 import Setting from './pages/settings/Setting.jsx'
+import KanBan from './pages/kanbanBoard/KanBan.jsx'
 
 
 //  this function calles the application and used in more then one place i gues 
@@ -76,6 +77,7 @@ function App() {
           <Route path="/dashboard" element={<Dash/>} />
           <Route path="/applications" element={<Application/>} />
           <Route path="/settings" element={<Setting/>} />
+          <Route path="/kanban" element={<KanBan/>} />
         </Route>
 
       </Routes>

@@ -99,7 +99,7 @@ const updateApplication = asyncHandler(
                 companyLink,
                 status
             },
-            {new: true}
+            {returnDocument: "after"}
         )
         
 
@@ -113,7 +113,38 @@ const updateApplication = asyncHandler(
         .json( new ApiResponce(
             200,
             updatedApplication,
-            "got that fuker"
+            "aplication updated successfully"
+        ))
+        
+    }
+)
+
+const updateApplicationStatus= asyncHandler( //  update this
+    async (req, res) => {
+        const {status} = req.body
+        const { id } = req.params
+
+
+        const updatedApplication = await Data.findByIdAndUpdate(
+            {_id: id},
+            {
+                status
+            },
+            {returnDocument: "after"}
+        )
+        
+
+        if(!updatedApplication){
+            throw new ApiError(400, " could not finta this applicaion")
+        }
+        
+        
+        res
+        .status(200)
+        .json( new ApiResponce(
+            200,
+            {},
+            "status updated successfully"
         ))
         
     }
@@ -296,6 +327,7 @@ export {
     addData,
     readAll,
     updateApplication,
+    updateApplicationStatus,
     deleteApplication,
     statusListProvider,
     graphData,
