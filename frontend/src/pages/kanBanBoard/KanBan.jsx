@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {api} from "../../main.jsx"
+import { api } from "../../main.jsx";
 import { useSelector, useDispatch } from 'react-redux';
 import { addApplicationData, allAplications } from '../../redux/slices/aplicationData.slice.js';
 import { LuMapPin, LuDollarSign, LuExternalLink, LuPlus } from 'react-icons/lu';
@@ -15,36 +15,34 @@ const BOARDS = [
 function KanBan() {
   const dispatch = useDispatch();
   const applicationData = useSelector(allAplications) || [];
-  // console.log(applicationData);
-  
 
-  const [pickedCardId, setPickedCardId] = useState("")
+  const [pickedCardId, setPickedCardId] = useState("");
 
   const handelDragStart = (id) => {
-    setPickedCardId(id)
-  }
+    setPickedCardId(id);
+  };
 
   const handelDragDrop = async (boardName) => {
     try {
-      const updatedApplicationList = applicationData.map((val) => val._id === pickedCardId ? {...val, status:boardName}: val )
-      dispatch(addApplicationData(updatedApplicationList)) 
+      const updatedApplicationList = applicationData.map((val) => 
+        val._id === pickedCardId ? { ...val, status: boardName } : val 
+      );
+      dispatch(addApplicationData(updatedApplicationList)); 
 
-      await api.patch(`/data/update-status/${pickedCardId}`,{status: boardName} )
+      await api.patch(`/data/update-status/${pickedCardId}`, { status: boardName });
     } catch (error) {
-      console.error("something went wrong while updating state of the job in kanban board")
+      console.error("something went wrong while updating state of the job in kanban board");
     }
-  }
+  };
 
   const handdleDropComlete = () => {
-    setPickedCardId("")
-  }
-
- 
+    setPickedCardId("");
+  };
 
   return (
     <div className="h-[calc(100vh-7rem)] flex flex-col items-center min-h-0">
       {/* Kanban Board Horizontal Track */}
-      <div className="flex-1 flex gap-4 overflow-x-auto overflow-y-hidden pb-2 items-stretch select-none">
+      <div className="flex-1 flex gap-5 overflow-x-auto overflow-y-hidden pb-4 items-stretch select-none w-full px-4">
         {BOARDS.map((board) => {
           const columnItems = applicationData.filter(
             (app) => app.status === board.id
@@ -53,61 +51,56 @@ function KanBan() {
           return (
             <div
               key={board.id}
-              className="w-72 shrink-0 bg-zinc-100/70 border border-zinc-200/80 rounded-xl flex flex-col h-[90%] min-h-0"
+              className="w-80 shrink-0 bg-zinc-100/70 dark:bg-zinc-950/80 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl flex flex-col h-full min-h-0 transition-colors"
             >
               {/* Column Header */}
-              <div className="p-3.5 border-b border-zinc-200/60 flex items-center justify-between shrink-0 bg-zinc-100/90 rounded-t-xl">
-                <div className="flex items-center gap-2">
-                  <span className={`h-2 w-2 rounded-full ${board.dot}`} />
-                  <h2 className="text-xs font-semibold text-zinc-900 tracking-tight">
+              <div className="p-4 border-b border-zinc-200/60 dark:border-zinc-800/80 flex items-center justify-between shrink-0 bg-zinc-100/90 dark:bg-zinc-900/90 rounded-t-xl transition-colors">
+                <div className="flex items-center gap-2.5">
+                  <span className={`h-2.5 w-2.5 rounded-full ${board.dot}`} />
+                  <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">
                     {board.label}
                   </h2>
-                  <span className="text-[11px] font-medium text-zinc-400 bg-white border border-zinc-200 px-1.5 py-0.2 rounded-full">
+                  <span className="text-xs font-medium text-zinc-400 dark:text-zinc-400 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-2 py-0.5 rounded-full transition-colors">
                     {columnItems.length}
                   </span>
                 </div>
 
                 <button
                   type="button"
-                  className="p-1 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-200/60 rounded-md transition-colors cursor-pointer"
+                  className="p-1.5 text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300 hover:bg-zinc-200/60 dark:hover:bg-zinc-800 rounded-md transition-colors cursor-pointer"
                   title="Add card"
                 >
-                  <LuPlus size={14} />
+                  <LuPlus size={16} />
                 </button>
               </div>
 
-              {/* Column Cards Stream (Independent vertical scrolling) */}
-              <div className="p-2.5 flex-1 flex flex-col gap-2.5 overflow-y-auto min-h-0"
-                // drag and drop logic here
+              {/* Column Cards Stream */}
+              <div 
+                className="p-3 flex-1 flex flex-col gap-3 overflow-y-auto min-h-0"
                 onDragOver={(e) => {
-                    e.preventDefault()
-                    // console.log("we on top of : ",board.id)
+                  e.preventDefault();
                 }}
                 onDrop={() => {
-                  handelDragDrop(board.id)
-                  handdleDropComlete
+                  handelDragDrop(board.id);
+                  handdleDropComlete();
                 }}
               >
                 {columnItems.map((app) => (
                   <div
                     key={app._id}
-                    className="bg-white border border-zinc-200/80 rounded-lg p-3.5 shadow-2xs hover:border-zinc-300 hover:shadow-xs transition-all cursor-grab active:cursor-grabbing group shrink-0"
-
-                    // drag and drop logic here
+                    className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl p-4 shadow-sm hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-md dark:shadow-black/40 transition-all cursor-grab active:cursor-grabbing group shrink-0"
                     draggable
                     onDragStart={() => {
-                      handelDragStart(app._id)
-                      // console.log("here is how element data looks like: ",app._id)
+                      handelDragStart(app._id);
                     }}
-
                   >
                     {/* Header: Initial & Role */}
-                    <div className="flex items-start justify-between gap-2 mb-1.5">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <div className="h-6 w-6 rounded-md bg-zinc-100 border border-zinc-200 flex items-center justify-center text-xs font-semibold text-zinc-700 shrink-0">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="h-8 w-8 rounded-md bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-sm font-semibold text-zinc-700 dark:text-zinc-200 shrink-0 transition-colors">
                           {app.companyName?.charAt(0).toUpperCase() || 'C'}
                         </div>
-                        <h3 className="text-xs font-semibold text-zinc-900 truncate">
+                        <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
                           {app.role || 'Untitled Role'}
                         </h3>
                       </div>
@@ -117,32 +110,32 @@ function KanBan() {
                           href={app.companyLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-zinc-400 hover:text-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                          className="text-zinc-400 p-2 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 mt-1"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <LuExternalLink size={12} />
+                          <LuExternalLink size={14} />
                         </a>
                       )}
                     </div>
 
-                    <p className="text-xs text-zinc-500 font-medium mb-3">
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium mb-4">
                       {app.companyName || 'Unknown Company'}
                     </p>
 
                     {/* Metadata Footer */}
-                    <div className="flex items-center justify-between text-[11px] text-zinc-400 border-t border-zinc-100 pt-2.5 mt-auto">
-                      <div className="flex items-center gap-1 truncate max-w-30">
-                        <LuMapPin size={11} className="shrink-0" />
-                        <span className="truncate">{app.location || 'Remote'}</span>
+                    <div className="flex items-center justify-between text-xs text-zinc-400 dark:text-zinc-400 border-t border-zinc-100 dark:border-zinc-800/80 pt-3 mt-auto transition-colors">
+                      <div className="flex items-center gap-1.5 truncate max-w-37.5">
+                        <LuMapPin size={13} className="shrink-0 text-zinc-400 dark:text-zinc-500" />
+                        <span className="truncate text-zinc-500 dark:text-zinc-400">{app.location || 'Remote'}</span>
                       </div>
 
                       {app.salaryRange ? (
-                        <div className="flex items-center gap-0.5 text-zinc-600 font-medium">
-                          <LuDollarSign size={11} className="shrink-0" />
+                        <div className="flex items-center gap-0.5 text-zinc-600 dark:text-zinc-300 font-medium">
+                          <LuDollarSign size={13} className="shrink-0 text-zinc-500 dark:text-zinc-400" />
                           <span>{app.salaryRange.replace(/^\$/, '')}</span>
                         </div>
                       ) : (
-                        <span>{app.createdAt?.slice(5, 10) || '—'}</span>
+                        <span className="text-zinc-400 dark:text-zinc-500">{app.createdAt?.slice(5, 10) || '—'}</span>
                       )}
                     </div>
                   </div>
@@ -150,7 +143,7 @@ function KanBan() {
 
                 {/* Empty State for Column */}
                 {columnItems.length === 0 && (
-                  <div className="h-24 border border-dashed border-zinc-200 rounded-lg flex items-center justify-center text-[11px] text-zinc-400 select-none shrink-0">
+                  <div className="h-28 border border-dashed border-zinc-200 dark:border-zinc-800/80 rounded-lg flex items-center justify-center text-xs text-zinc-400 dark:text-zinc-500 select-none shrink-0 transition-colors">
                     No applications
                   </div>
                 )}

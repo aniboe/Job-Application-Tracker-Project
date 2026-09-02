@@ -43,14 +43,14 @@ function Application() {
         {/* Action Header: Search, Filter, Add */}
         <div className="flex items-center justify-between gap-3">
           {/* Search Input */}
-          <div className="flex items-center bg-white border border-zinc-200 rounded-lg px-3 py-2 w-full max-w-sm shadow-sm focus-within:border-zinc-400 transition-colors">
-            <LuSearch className="text-zinc-400 text-lg shrink-0" />
+          <div className="flex items-center bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 py-2 w-full max-w-sm shadow-sm focus-within:border-zinc-400 dark:focus-within:border-zinc-600 transition-colors">
+            <LuSearch className="text-zinc-400 dark:text-zinc-500 text-lg shrink-0" />
             <input 
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search applications..."
-              className="w-full bg-transparent outline-none text-sm text-zinc-700 placeholder:text-zinc-400 pl-2.5"
+              className="w-full bg-transparent outline-none text-sm text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-600 pl-2.5"
             />
           </div>
 
@@ -59,20 +59,20 @@ function Application() {
             <select 
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="h-9 px-3 bg-white border border-zinc-200 rounded-lg text-sm font-medium text-zinc-700 outline-none hover:border-zinc-300 focus:border-zinc-400 transition-colors shadow-sm cursor-pointer"
+              className="h-9 px-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm font-medium text-zinc-700 dark:text-zinc-200 outline-none hover:border-zinc-300 dark:hover:border-zinc-700 focus:border-zinc-400 dark:focus:border-zinc-600 transition-colors shadow-sm cursor-pointer"
             >
-              <option value="All">All Statuses</option>
-              <option value="Applied">Applied</option>
-              <option value="Interview">Interview</option>
-              <option value="Offer">Offer</option>
-              <option value="Accepted">Accepted</option>
-              <option value="Rejected">Rejected</option>
+              <option value="All" className="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">All Statuses</option>
+              <option value="Applied" className="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">Applied</option>
+              <option value="Interview" className="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">Interview</option>
+              <option value="Offer" className="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">Offer</option>
+              <option value="Accepted" className="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">Accepted</option>
+              <option value="Rejected" className="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">Rejected</option>
             </select>
 
             <button 
               type="button"
               onClick={() => setAddApplication(true)}
-              className="h-9 px-3.5 flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-sm font-medium shadow-sm transition-colors cursor-pointer"
+              className="h-9 px-3.5 flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-white dark:text-zinc-950 rounded-lg text-sm font-medium shadow-sm transition-colors cursor-pointer"
             >
               <LuPlus className="text-base" />
               <span>New</span>
@@ -81,9 +81,9 @@ function Application() {
         </div>
 
         {/* Applications Table / List Container */}
-        <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm flex-1 flex flex-col min-h-0">
+        <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/90 rounded-xl overflow-hidden shadow-sm flex-1 flex flex-col min-h-0 transition-colors">
           {/* Table Header */}
-          <div className="grid grid-cols-12 gap-4 px-5 py-3 border-b border-zinc-100 bg-zinc-50/75 text-xs font-semibold uppercase tracking-wider text-zinc-500 select-none">
+          <div className="grid grid-cols-12 gap-4 px-5 py-3 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/75 dark:bg-zinc-900/60 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 select-none">
             <span className="col-span-5">Role & Company</span>
             <span className="col-span-3">Location</span>
             <span className="col-span-2">Salary</span>
@@ -91,7 +91,7 @@ function Application() {
           </div>
 
           {/* List Content */}
-          <div className="flex-1 overflow-y-auto divide-y divide-zinc-100">
+          <div className="flex-1 overflow-y-auto divide-y divide-zinc-100 dark:divide-zinc-800/70">
             {filteredApplications.length > 0 ? (
               filteredApplications.map((value) => (
                 <ApplicationCard 
@@ -108,7 +108,7 @@ function Application() {
                 />
               ))
             ) : (
-              <div className="h-48 flex flex-col items-center justify-center text-zinc-400 text-sm">
+              <div className="h-48 flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm">
                 No applications found
               </div>
             )}
@@ -119,7 +119,7 @@ function Application() {
       {/* Modal Dialogs */}
       {addApplication && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60 backdrop-blur-xs p-4"
           onClick={() => setAddApplication(false)}
         >
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg">
@@ -130,7 +130,7 @@ function Application() {
 
       {showApplication && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60 backdrop-blur-xs p-4"
           onClick={() => setShowApplication(false)}
         >
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg">
@@ -146,7 +146,7 @@ function Application() {
 
       {editApplication && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60 backdrop-blur-xs p-4"
           onClick={() => setEditApplication(false)}
         >
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg">
@@ -163,7 +163,7 @@ function Application() {
 
       {showDeleteWarning && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60 backdrop-blur-xs p-4"
           onClick={() => setShowDeleteWarning(false)}
         >
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md">

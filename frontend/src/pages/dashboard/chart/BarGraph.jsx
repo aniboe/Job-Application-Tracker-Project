@@ -21,9 +21,9 @@ function CustomTooltip({ active, payload }) {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div className="bg-white px-3 py-1.5 rounded-lg border border-zinc-200 shadow-sm text-xs">
-        <span className="font-medium text-zinc-700">{data.category}:</span>{' '}
-        <span className="font-semibold text-zinc-900">{data.value}</span>
+      <div className="bg-white dark:bg-zinc-950 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm text-xs transition-colors">
+        <span className="font-medium text-zinc-700 dark:text-zinc-300">{data.category}:</span>{' '}
+        <span className="font-semibold text-zinc-900 dark:text-zinc-100">{data.value}</span>
       </div>
     );
   }
@@ -55,14 +55,17 @@ function BarGraph({ barGraphData = {} }) {
             width={72}
             axisLine={false}
             tickLine={false}
-            tick={{ fill: '#71717A', fontSize: 12 }}
+            tick={{ fill: '#A1A1AA', fontSize: 12 }}
           />
 
           {/* Hidden Values Axis */}
           <XAxis type="number" axisLine={false} tickLine={false} hide />
 
-          {/* Minimal Tooltip */}
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: '#F4F4F5', opacity: 0.6 }} />
+          {/* Minimal Tooltip with dynamic cursor background for dark mode */}
+          <Tooltip
+            content={<CustomTooltip />}
+            cursor={{ fill: 'currentColor', className: 'text-zinc-100 dark:text-zinc-800/40' }}
+          />
 
           {/* Subtle Dynamic Status Colored Bars */}
           <Bar dataKey="value" radius={[0, 4, 4, 0]}>

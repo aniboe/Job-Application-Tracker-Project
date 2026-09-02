@@ -12,8 +12,8 @@ import {
 function CustomTooltip({ active, payload, label }) {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white px-3 py-2 rounded-lg border border-zinc-200 shadow-sm text-xs">
-        {label && <p className="font-medium text-zinc-400 mb-1">{label}</p>}
+      <div className="bg-white dark:bg-zinc-950 px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm text-xs transition-colors">
+        {label && <p className="font-medium text-zinc-400 dark:text-zinc-500 mb-1">{label}</p>}
         <div className="flex flex-col gap-1">
           {payload.map((entry) => (
             <div key={entry.dataKey} className="flex items-center gap-2">
@@ -21,8 +21,8 @@ function CustomTooltip({ active, payload, label }) {
                 className="h-2 w-2 rounded-full"
                 style={{ backgroundColor: entry.color }}
               />
-              <span className="capitalize text-zinc-600">{entry.dataKey}:</span>
-              <span className="font-semibold text-zinc-900">{entry.value}</span>
+              <span className="capitalize text-zinc-600 dark:text-zinc-400">{entry.dataKey}:</span>
+              <span className="font-semibold text-zinc-900 dark:text-zinc-100">{entry.value}</span>
             </div>
           ))}
         </div>
@@ -40,18 +40,19 @@ function LineGaph({ lineGraphData = [] }) {
           data={lineGraphData}
           margin={{ top: 12, right: 12, left: 12, bottom: 8 }}
         >
-          {/* Subtle Horizontal Guidelines */}
+          {/* Subtle Horizontal Guidelines using CSS variable styling */}
           <CartesianGrid
             strokeDasharray="3 3"
             vertical={false}
-            stroke="#F4F4F5"
+            stroke="currentColor"
+            className="text-zinc-100 dark:text-zinc-800/80"
           />
 
           <XAxis
             dataKey="date"
             axisLine={false}
             tickLine={false}
-            tick={{ fill: '#A1A1AA', fontSize: 11 }}
+            tick={{ fill: '#71717A', fontSize: 11 }}
             dy={6}
           />
           <YAxis axisLine={false} tickLine={false} hide allowDecimals={false} />
@@ -63,10 +64,11 @@ function LineGaph({ lineGraphData = [] }) {
           <Line
             dataKey="applications"
             type="monotone"
-            stroke="#18181B"
+            stroke="currentColor"
+            className="text-zinc-900 dark:text-zinc-100"
             strokeWidth={2}
             dot={false}
-            activeDot={{ r: 4, fill: '#18181B', strokeWidth: 0 }}
+            activeDot={{ r: 4, strokeWidth: 0, className: 'fill-zinc-900 dark:fill-zinc-100' }}
           />
 
           {/* Interviews Line */}
@@ -86,9 +88,3 @@ function LineGaph({ lineGraphData = [] }) {
 }
 
 export default LineGaph;
-
-/*NOTE:
-    * type="basis" : makes the lines smooth so the 
-      real datapoints and actual lines can be be in diffrent position 
-      to disable data points for "Tooltip" use "activeDot={false}"
- */

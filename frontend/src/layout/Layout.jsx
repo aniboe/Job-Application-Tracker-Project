@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom';
 
 function Layout() {
   return (
-    <div className="h-screen flex bg-zinc-50 overflow-hidden font-sans text-zinc-900">
+    <div className="h-screen flex bg-zinc-50 dark:bg-black overflow-hidden font-sans text-zinc-900 dark:text-zinc-100 transition-colors">
       {/* Sidebar Navigation */}
       <SideNav />
 
