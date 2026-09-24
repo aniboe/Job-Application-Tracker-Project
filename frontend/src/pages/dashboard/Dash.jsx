@@ -47,7 +47,7 @@ function Dash() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-5 pb-6">
+    <div className="flex flex-col gap-5 h-full overflow-y-auto">
       {/* Metric Counters Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
         {METRIC_CARDS.map(({ key, label, dot }) => (
@@ -106,7 +106,7 @@ function Dash() {
         </div>
 
         {/* List Content */}
-        <div className="divide-y divide-zinc-100 dark:divide-zinc-800/70">
+        <div className="divide-y divide-zinc-100 dark:divide-zinc-800/70 overflow-auto">
           {recentTenApplication.length > 0 ? (
             recentTenApplication.map((val) => (
               <RecentAplication key={val._id} applicationData={val} />

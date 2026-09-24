@@ -33,6 +33,8 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 function LineGaph({ lineGraphData = [] }) {
+  console.log(lineGraphData);
+  
   return (
     <div className="h-full w-full">
       <ResponsiveContainer width="100%" height="100%">
@@ -62,9 +64,23 @@ function LineGaph({ lineGraphData = [] }) {
 
           {/* Applications Line */}
           <Line
+            key="applications-glow"
             dataKey="applications"
             type="monotone"
-            stroke="currentColor"
+            stroke="rgba(59, 130, 246, 0.3)"
+            strokeWidth={5}
+            dot={false}
+            activeDot={{
+              r: 4,
+              strokeWidth: 0,
+              className: 'fill-zinc-900 dark:fill-zinc-100',
+            }}
+            />
+          <Line
+            key="applications"
+            dataKey="applications"
+            type="monotone"
+            stroke="#3B82F6"
             className="text-zinc-900 dark:text-zinc-100"
             strokeWidth={2}
             dot={false}
@@ -72,7 +88,7 @@ function LineGaph({ lineGraphData = [] }) {
           />
 
           {/* Interviews Line */}
-          <Line
+          {/* <Line
             dataKey="interviews"
             type="monotone"
             stroke="#3B82F6"
@@ -80,7 +96,7 @@ function LineGaph({ lineGraphData = [] }) {
             strokeDasharray="4 4"
             dot={false}
             activeDot={{ r: 4, fill: '#3B82F6', strokeWidth: 0 }}
-          />
+          /> */}
         </LineChart>
       </ResponsiveContainer>
     </div>

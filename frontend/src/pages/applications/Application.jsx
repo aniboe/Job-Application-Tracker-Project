@@ -83,17 +83,17 @@ function Application() {
         {/* Applications Table / List Container */}
         <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/90 rounded-xl overflow-hidden shadow-sm flex-1 flex flex-col min-h-0 transition-colors">
           {/* Table Header */}
-          <div className="grid grid-cols-12 gap-4 px-5 py-3 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/75 dark:bg-zinc-900/60 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 select-none">
+          <div className="grid grid-cols-12 gap-4 items-center px-5 py-3 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/75 dark:bg-zinc-900/60 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 select-none">
             <span className="col-span-5">Role & Company</span>
             <span className="col-span-3">Location</span>
             <span className="col-span-2">Salary</span>
-            <span className="col-span-2 text-right">Status</span>
+            <span className="col-span-2 text-center pl-17">Status</span>
           </div>
 
           {/* List Content */}
-          <div className="flex-1 overflow-y-auto divide-y divide-zinc-100 dark:divide-zinc-800/70">
+          <div className="flex-1 overflow-y-auto divide-y divide-zinc-100 dark:divide-zinc-800/70 no-scrollbar">
             {filteredApplications.length > 0 ? (
-              filteredApplications.map((value) => (
+              filteredApplications.main || filteredApplications.map((value) => (
                 <ApplicationCard 
                   key={value._id}
                   cardData={value}

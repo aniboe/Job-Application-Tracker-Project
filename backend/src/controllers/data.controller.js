@@ -233,6 +233,49 @@ const graphData = asyncHandler(
                 
         ])
 
+        // const LineData = await Data.aggregate([
+        //     {
+        //         $match: {
+        //             user: user // or new mongoose.Types.ObjectId(user) if needed
+        //         }
+        //     },
+        //     {
+        //         $group: {
+        //         _id: {
+        //             date: {
+        //             $dateToString: {
+        //                 format: "%Y-%m-%d",
+        //                 date: "$createdAt",
+        //             },
+        //             },
+        //         },
+        //         applications: {
+        //             $sum: {
+        //             $cond: [{ $eq: ["$status", "Applied"] }, 1, 0],
+        //             },
+        //         },
+        //         interviews: {
+        //             $sum: {
+        //             $cond: [{ $eq: ["$status", "Interview"] }, 1, 0],
+        //             },
+        //         },
+        //         },
+        //     },
+        //     {
+        //         $sort: {
+        //         "_id.date": 1,
+        //         },
+        //     },
+        //     {
+        //         $project: {
+        //         _id: 0,
+        //         date: "$_id.date",
+        //         applications: 1,
+        //         interviews: 1,
+        //         },
+        //     },
+        // ]);
+
         const LineData = await Data.aggregate([
             {
                 $match: {
@@ -241,39 +284,32 @@ const graphData = asyncHandler(
             },
             {
                 $group: {
-                _id: {
+                    _id: {
                     date: {
-                    $dateToString: {
+                        $dateToString: {
                         format: "%Y-%m-%d",
                         date: "$createdAt",
+                        },
                     },
                     },
-                },
-                applications: {
-                    $sum: {
-                    $cond: [{ $eq: ["$status", "Applied"] }, 1, 0],
+                    applications: {
+                    $sum: 1,
                     },
-                },
-                interviews: {
-                    $sum: {
-                    $cond: [{ $eq: ["$status", "Interview"] }, 1, 0],
-                    },
-                },
                 },
             },
             {
                 $sort: {
-                "_id.date": 1,
+                    "_id.date": 1,
                 },
             },
             {
                 $project: {
-                _id: 0,
-                date: "$_id.date",
-                applications: 1,
-                interviews: 1,
+                    _id: 0,
+                    date: "$_id.date",
+                    applications: 1,
                 },
             },
+
         ]);
 
         if(

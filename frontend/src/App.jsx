@@ -49,9 +49,9 @@ function App() {
 
   return (
     <>
-    <div className='w-full h-10 bg-red-200 flex items-center justify-center'>
+    {/* <div className='w-full h-10 bg-red-200 flex items-center justify-center'>
       <h1 className='text-red-500 text-xl font-semibold'>This site is Under Progress</h1>
-    </div>
+    </div> */}
 
       <Routes>
 
