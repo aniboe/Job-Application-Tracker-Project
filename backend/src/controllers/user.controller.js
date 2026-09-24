@@ -396,14 +396,20 @@ const sendOtp = asyncHandler(
         const currDate = new Date()
         const expiresAt = new Date(Date.now() + 1000*60*2) // valid 2 mins
 
-        const otpInDb = await Otp.create(
-            {
+        const otpInDb = await Otp.findOne({email})
+
+        if(otpInDb){
+            otpInDb.otp = otp
+            otpInDb.expiresAt = expiresAt
+            await otpInDb.save()
+        }
+        else{
+            otpInDb = await Otp.create({
                 email,
                 otp,
                 expiresAt
-
-            }
-        )
+            })
+        }
         if(!otpInDb){
             throw new ApiError(400,"something went wront while generating OTP")
         }
