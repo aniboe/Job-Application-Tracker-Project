@@ -8,6 +8,8 @@ import { uploadOnCloudinary, deleteFromCloudinary } from "../utility/cloudinary.
 import { Data } from "../models/data.model.js"
 import { Otp } from "../models/otp.model.js"
 
+import { transporter } from "../utility/NodeMailer.js"
+
 
 const cookieOptions = {
     httpOnly: true,
@@ -385,6 +387,7 @@ const deleteAccount = asyncHandler(
 const sendOtp = asyncHandler(
     async (req, res) => {
         const {email} = req.body
+
         if(!email){
             throw new ApiError(400,  "please enter email")
         }
@@ -407,6 +410,14 @@ const sendOtp = asyncHandler(
         console.log("otp:", otp);
 
         // add node mailer part here
+
+
+        const info = await transporter.sendMail({
+            from: process.env.GMAIL_USER,
+            to: email,
+            subject: "L Tracker OTP Verification",
+            text: otp.toString(),
+        });
         
 
         res

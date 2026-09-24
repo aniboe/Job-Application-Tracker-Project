@@ -18,9 +18,31 @@ export function Register() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+
+
+
+
+  const fetchAppData = async () => {
+    try {
+      const [applicationsRes, userRes] = await Promise.all([
+        api.get(`/data/get-all-data`),
+        api.get(`/user/me`),
+      ]);
+
+      dispatch(addApplicationData(applicationsRes?.data));
+      dispatch(addUserData(userRes?.data?.data));
+    } catch (err) {
+      console.error('Failed to sync data after login:', err.message);
+    }
+  };
+  
+  
+  
+
   // Safely redirect if already logged in
   useEffect(() => {
     if (userData?.username) {
+      fetchAppData()
       navigate('/dashboard');
     }
   }, [userData, navigate]);
@@ -40,7 +62,8 @@ export function Register() {
     try {
       await api.post(`/user/send-otp`, {
         email: email.trim(),
-      }).then((data) => console.log(data.data))
+      })
+      // .then((data) => console.log(data.data))
       setStep('otp');
     } catch (err) {
       setError(err?.response?.data?.message || 'Failed to send OTP. Please try again.');
@@ -71,6 +94,8 @@ export function Register() {
         email: email.trim(),
         password: password,
       });
+
+      fetchAppData()
 
       navigate('/dashboard');
     } catch (err) {
