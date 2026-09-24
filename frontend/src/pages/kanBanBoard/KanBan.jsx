@@ -65,13 +65,13 @@ function KanBan() {
                   </span>
                 </div>
 
-                <button
+                {/* <button // add this later some time
                   type="button"
                   className="p-1.5 text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300 hover:bg-zinc-200/60 dark:hover:bg-zinc-800 rounded-md transition-colors cursor-pointer"
                   title="Add card"
                 >
                   <LuPlus size={16} />
-                </button>
+                </button> */}
               </div>
 
               {/* Column Cards Stream */}

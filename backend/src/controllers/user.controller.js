@@ -6,6 +6,7 @@ import mongoose from "mongoose"
 import JWT from "jsonwebtoken"
 import { uploadOnCloudinary, deleteFromCloudinary } from "../utility/cloudinary.js"
 import { Data } from "../models/data.model.js"
+import { Otp } from "../models/otp.model.js"
 
 
 const cookieOptions = {
@@ -142,9 +143,6 @@ const login = asyncHandler(
 
 const logout = asyncHandler(
     async (req, res) => {
-        const user = req.userData
-        if(!user) throw new ApiError(400, "here? invalid token")
-        
         res
         .status(200)
         .clearCookie("accessToken", cookieOptions)
@@ -383,6 +381,78 @@ const deleteAccount = asyncHandler(
     }
 )
 
+// new stuf here 
+const sendOtp = asyncHandler(
+    async (req, res) => {
+        const {email} = req.body
+        if(!email){
+            throw new ApiError(400,  "please enter email")
+        }
+        const otp = Math.floor(1000000 + Math.random()*1000000)
+
+        const currDate = new Date()
+        const expiresAt = new Date(Date.now() + 1000*60*2) // valid 2 mins
+
+        const otpInDb = await Otp.create(
+            {
+                email,
+                otp,
+                expiresAt
+
+            }
+        )
+        if(!otpInDb){
+            throw new ApiError(400,"something went wront while generating OTP")
+        }
+        console.log("otp:", otp);
+
+        // add node mailer part here
+        
+
+        res
+        .status(200)
+        .json(
+            new ApiResponce(
+                200,
+                {},
+                "sent otp successfully"
+            )
+        )
+    }
+)
+
+const verifyOtp = asyncHandler(
+    async (req, res) => {
+        const {email, otp} = req.body
+
+        if(!email){
+            throw new ApiError(400, "could not find email in server")
+        }
+        if(!otp){
+            throw new ApiError(400, "plese enter otp")
+        }
+
+        const otpInDb = await Otp.findOne({email})
+
+        if(!otpInDb){
+            throw new ApiError(400, "otp expired or invalid")
+        }
+        const isOtpCorrect = otpInDb.isOtpCorrect(otp)
+        if(!isOtpCorrect){
+            throw new ApiError(400, "invalid otp")
+        }
+        
+
+        res
+        .status(200)
+        .json(new ApiResponce(
+            200,
+            {},
+            "otp verified successfully"
+        ))
+    }
+)
+
 export {
     registerUser,
     login,
@@ -393,5 +463,7 @@ export {
     updatUserName,
     updatUserEmail,
     updatUserPassword,
-    deleteAccount
+    deleteAccount,
+    sendOtp,
+    verifyOtp,
 }

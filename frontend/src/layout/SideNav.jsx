@@ -1,21 +1,41 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { TbLayoutSidebarRightExpand, TbLayoutSidebarLeftExpand } from "react-icons/tb";
 import { MdSpaceDashboard, MdListAlt, MdViewKanban, MdLogout } from "react-icons/md";
 import { IoMdSettings } from 'react-icons/io';
 import { api } from '../main';
 
+import { useDispatch } from "react-redux";
+import { addApplicationData } from '../redux/slices/aplicationData.slice.js';
+import { addUserData } from '../redux/slices/userData.slice.js';
+
 function SideNav() {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = async () => {
     try {
       await api.post(`/user/logout`);
+      dispatch(addApplicationData([]));
+      dispatch(addUserData({}));
       navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
     }
+  };
+
+  // Helper function to handle active/inactive classes for nav links
+  const getLinkClass = ({ isActive }) => {
+    const baseStyle = `h-11 rounded-xl flex items-center transition-colors ${
+      isCollapsed ? 'justify-center' : 'px-3'
+    }`;
+    
+    const activeStyle = isActive
+      ? 'bg-blue-200 text-blue-800 dark:bg-zinc-850 dark:text-blue-400 font-medium'
+      : 'text-zinc-600 dark:text-zinc-300 hover:bg-blue-100 hover:text-blue-700 dark:hover:bg-zinc-900 dark:hover:text-blue-400';
+
+    return `${baseStyle} ${activeStyle}`;
   };
 
   return (
@@ -62,42 +82,36 @@ function SideNav() {
           <nav>
             <ul className='flex flex-col gap-1'>
               <li>
-                <Link 
+                <NavLink 
                   to="/dashboard" 
                   title={isCollapsed ? "Dashboard" : ""}
-                  className={`h-11 rounded-xl flex items-center text-zinc-600 dark:text-zinc-300 hover:bg-blue-100 hover:text-blue-700 dark:hover:bg-zinc-900 dark:hover:text-blue-400 transition-colors ${
-                    isCollapsed ? 'justify-center' : 'px-3'
-                  }`}
+                  className={getLinkClass}
                 >
                   <MdSpaceDashboard className="text-xl shrink-0" />
                   {!isCollapsed && <span className='text-base pl-3 whitespace-nowrap'>Dashboard</span>}
-                </Link>
+                </NavLink>
               </li>
 
               <li>
-                <Link 
+                <NavLink 
                   to="/applications" 
                   title={isCollapsed ? "Application" : ""}
-                  className={`h-11 rounded-xl flex items-center text-zinc-600 dark:text-zinc-300 hover:bg-blue-100 hover:text-blue-700 dark:hover:bg-zinc-900 dark:hover:text-blue-400 transition-colors ${
-                    isCollapsed ? 'justify-center' : 'px-3'
-                  }`}
+                  className={getLinkClass}
                 >
                   <MdListAlt className="text-xl shrink-0" />
                   {!isCollapsed && <span className='text-base pl-3 whitespace-nowrap'>Application</span>}
-                </Link>
+                </NavLink>
               </li>
 
               <li>
-                <Link 
+                <NavLink 
                   to="/kanban" 
                   title={isCollapsed ? "Kanban Board" : ""}
-                  className={`h-11 rounded-xl flex items-center text-zinc-600 dark:text-zinc-300 hover:bg-blue-100 hover:text-blue-700 dark:hover:bg-zinc-900 dark:hover:text-blue-400 transition-colors ${
-                    isCollapsed ? 'justify-center' : 'px-3'
-                  }`}
+                  className={getLinkClass}
                 >
                   <MdViewKanban className="text-xl shrink-0" />
                   {!isCollapsed && <span className='text-base pl-3 whitespace-nowrap'>Kanban Board</span>}
-                </Link>
+                </NavLink>
               </li>
             </ul>
           </nav>
@@ -107,16 +121,14 @@ function SideNav() {
         <div className='mt-auto'>
           <ul className='flex flex-col gap-1'>
             <li>
-              <Link 
+              <NavLink 
                 to="/settings" 
                 title={isCollapsed ? "Settings" : ""}
-                className={`h-11 rounded-xl flex items-center text-zinc-600 dark:text-zinc-300 hover:bg-blue-100 hover:text-blue-700 dark:hover:bg-zinc-900 dark:hover:text-blue-400 transition-colors ${
-                  isCollapsed ? 'justify-center' : 'px-3'
-                }`}
+                className={getLinkClass}
               >
                 <IoMdSettings className="text-xl shrink-0" />
                 {!isCollapsed && <span className='text-base pl-3 whitespace-nowrap'>Settings</span>}
-              </Link>
+              </NavLink>
             </li>
 
             <li>

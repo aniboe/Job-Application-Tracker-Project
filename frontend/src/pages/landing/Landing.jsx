@@ -98,16 +98,9 @@ function Landing() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 py-6 px-6 sm:px-12 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-400 dark:text-zinc-500 gap-3 transition-colors">
+      <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 py-3 px-6 sm:px-12 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-400 dark:text-zinc-500 gap-3 transition-colors">
         <p>© {new Date().getFullYear()} L Tracker. All rights reserved.</p>
-        <div className="flex items-center gap-4">
-          <Link to="/login" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">
-            Login
-          </Link>
-          <Link to="/register" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">
-            Register
-          </Link>
-        </div>
+        
       </footer>
     </div>
   );
