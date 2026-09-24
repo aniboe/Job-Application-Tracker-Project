@@ -393,10 +393,9 @@ const sendOtp = asyncHandler(
         }
         const otp = Math.floor(1000000 + Math.random()*1000000)
 
-        const currDate = new Date()
         const expiresAt = new Date(Date.now() + 1000*60*2) // valid 2 mins
 
-        const otpInDb = await Otp.findOne({email})
+        let otpInDb = await Otp.findOne({email})
 
         if(otpInDb){
             otpInDb.otp = otp
