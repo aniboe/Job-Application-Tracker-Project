@@ -412,7 +412,7 @@ const sendOtp = asyncHandler(
         if(!otpInDb){
             throw new ApiError(400,"something went wront while generating OTP")
         }
-        console.log("otp:", otp);
+        // console.log("otp:", otp);
 
         // add node mailer part here
 
