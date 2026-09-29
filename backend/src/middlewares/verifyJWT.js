@@ -17,7 +17,6 @@ export const authenticate = asyncHandler(
         const decodedJWT = await JWT.verify(token, process.env.JWT_SECRET)
 
         if(!decodedJWT) throw new ApiError(400, "invalid token")
-        if(!decodedJWT?.googleId) throw new ApiError(400, "unauthorised access")
 
         // const isUserInDB = await User.findById({_id: decodedJWT._id}).select("-password -createdAt -updatedAt -__v")
         const isUserInDB = await User.findOne({
