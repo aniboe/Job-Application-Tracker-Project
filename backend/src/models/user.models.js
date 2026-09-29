@@ -3,6 +3,10 @@ import mongoose from "mongoose"
 
 const UserSchema = mongoose.Schema(
     {
+        googleId: {
+            type: String,
+            unique: true
+        },
         username: {
             type: String,
             required: true,
@@ -19,12 +23,12 @@ const UserSchema = mongoose.Schema(
         },
         password: {
             type: String,
-            required: true
+            // required: true
         },
         avatar: {
             type: String,
         },
-        publicId: {
+        publicId: { // to delete cloudinary images 
             type: String,
         },
         

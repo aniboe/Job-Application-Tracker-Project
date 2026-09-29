@@ -18,8 +18,13 @@ export const authenticate = asyncHandler(
 
         if(!decodedJWT) throw new ApiError(400, "invalid token")
 
-        // check if asociated data exists in database
-        const isUserInDB = await User.findById({_id: decodedJWT._id}).select("-password -createdAt -updatedAt -__v")
+        // const isUserInDB = await User.findById({_id: decodedJWT._id}).select("-password -createdAt -updatedAt -__v")
+        const isUserInDB = await User.findOne({
+            $or:[
+                {googleId: decodedJWT?.googleId},
+                {_id: decodedJWT?._id},
+            ]
+        }).select("-password -createdAt -updatedAt -__v")
         if(!isUserInDB) throw new ApiError(400, "invalid token")
 
         // if everything works fine send user in req.userData as res to controler

@@ -10,6 +10,9 @@ import { Otp } from "../models/otp.model.js"
 
 import { transporter } from "../utility/NodeMailer.js"
 
+import { OAuth } from "../utility/GoogleAuth.js"
+import crypto from 'crypto'
+
 
 const cookieOptions = {
     httpOnly: true,
@@ -140,6 +143,150 @@ const login = asyncHandler(
             )
         )
 
+    }
+)
+
+const createGoogleAuthLink = asyncHandler(
+    async(req, res) => {
+
+        // generate link
+        const authurl = OAuth.generateAuthUrl(
+            {
+                access_type: "offline",
+                scope: ['profile', 'email']
+            }
+        )
+
+        // redirect to link thats it 👋
+        res.redirect(authurl)
+    }
+)
+
+const googleSignSomehing = asyncHandler(
+    async(req, res) => {
+
+
+
+        // get the query from returned page 
+        const { code } = req.query
+        if(!code){
+            throw new ApiError(400, "could not verify user")
+        }
+
+
+
+
+        // const acc = await OAuth.getAccessToken(code) // maybe this used to be a thing, but not any more
+        
+        const { tokens } = await OAuth.getToken(code)
+        if(!tokens){
+            throw new ApiError(400,"invalid token recieded from OAuth")
+        }
+
+
+
+
+        // verify this token that we recieved from getToken
+        const ticket = await OAuth.verifyIdToken(
+            {
+                idToken: tokens.id_token,
+                audience: process.env.CLIENT_ID
+            }
+        )
+        // console.log("Ticket: ",ticket)
+        if(!ticket){
+            throw new ApiError(400, "token could not be verified")
+        }
+
+
+
+        const payload = ticket.payload // payload contains all the required data to register user
+        // console.log("Payload: ",payload)
+        if(!payload){
+            throw new ApiError(400, "invalid payload recieved")
+        }
+
+        
+        // THIS SHOULD WORK SAME AS ABOVE (i didnt check)
+        // const somethinf = await OAuth.verifyIdToken(
+        //     {
+        //         idToken: (await OAuth.getToken(code)).tokens.id_token,
+        //         audience: process.env.CLIENT_ID
+        //     }
+        // )
+        // const difPayload = somethinf.payload
+
+        
+        let user = await User.findOne({googleId: payload?.sub})
+
+        if(user){
+
+            const token = JWT.sign(
+                {
+                    _id: user?._id || "",
+                    googleId: user?.googleId,
+                    username: user?.username,
+                    email: user?.email
+                },
+                process.env.JWT_SECRET,
+                {expiresIn: "7d"}
+            )
+    
+            return res // wothout reurn this wont stop
+            .status(200)
+            .cookie("accessToken", token, cookieOptions)
+            .redirect("http://localhost:5173/dashboard")
+        }
+
+        // check username or email
+
+        const isEmailInUse = await User.findOne({email: payload.email})
+        if(isEmailInUse){
+            throw new ApiError(400, "email already in use")
+        }
+
+
+        let username = payload.given_name;
+
+        const isUsernameInUse = await User.findOne({
+            username: username
+        });
+
+        if (isUsernameInUse) {
+            // generate a different username
+            username = `${username}_${crypto.randomInt(1000, 10000)}`;
+        }
+
+
+
+        user = await User.create(
+            {
+                googleId: payload?.sub,
+                username: payload?.given_name,
+                email: payload?.email,
+                avatar: payload?.picture
+            }
+        )
+        if(!user){
+            throw new ApiError(400, "somthing went woring while creating account")
+        }
+
+        const token = JWT.sign(
+            {
+                _id: user?._id || "",
+                googleId: user?.googleId,
+                username: user?.username,
+                email: user?.email
+            },
+            process.env.JWT_SECRET,
+            {expiresIn: "7d"}
+        )
+
+
+        res
+        .status(200)
+        .cookie("accessToken", token, cookieOptions)
+        .redirect("http://localhost:5173/dashboard")
     }
 )
 
@@ -482,4 +629,6 @@ export {
     deleteAccount,
     sendOtp,
     verifyOtp,
+    createGoogleAuthLink,
+    googleSignSomehing,
 }

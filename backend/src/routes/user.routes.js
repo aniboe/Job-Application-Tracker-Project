@@ -9,7 +9,10 @@ import { login,
     logout, removeAvatar,
     deleteAccount,
     sendOtp,
-    verifyOtp} from "../controllers/user.controller.js";
+    verifyOtp,
+    createGoogleAuthLink,
+    googleSignSomehing} from "../controllers/user.controller.js";
+
 import { authenticate } from "../middlewares/verifyJWT.js";
 import { upload } from "../middlewares/multer.js";
 
@@ -27,5 +30,8 @@ userRouter.route("/update-password").post(authenticate , updatUserPassword)
 userRouter.route("/delete-account").post(authenticate , deleteAccount)
 userRouter.route("/send-otp").post(sendOtp)
 userRouter.route("/verify-otp").post(verifyOtp)
+
+userRouter.route("/google/consent").get(createGoogleAuthLink)
+userRouter.route("/google/callback").get(googleSignSomehing)
 
 export default userRouter
