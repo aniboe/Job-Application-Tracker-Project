@@ -13,6 +13,8 @@ import { transporter } from "../utility/NodeMailer.js"
 import { OAuth } from "../utility/GoogleAuth.js"
 import crypto from 'crypto'
 
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || process.env.FRONTEND_ORIGN || process.env.FRONTEND_URL || process.env.FRONTEND || ""
+
 
 // const cookieOptions = {
 //     httpOnly: true,
@@ -181,6 +183,7 @@ const googleSignSomehing = asyncHandler(
 
         // get the query from returned page 
         const { code } = req.query
+            console.log("OAuth callback query:", req.query)
         if(!code){
             throw new ApiError(400, "could not verify user")
         }
@@ -191,6 +194,7 @@ const googleSignSomehing = asyncHandler(
         // const acc = await OAuth.getAccessToken(code) // maybe this used to be a thing, but not any more
         
         const { tokens } = await OAuth.getToken(code)
+        console.log("OAuth tokens:", tokens)
         if(!tokens){
             throw new ApiError(400,"invalid token recieded from OAuth")
         }
@@ -247,7 +251,7 @@ const googleSignSomehing = asyncHandler(
             return res // wothout reurn this wont stop
             // .status(300) // this was causing badrequest while oauth
             .cookie("accessToken", token, cookieOptions)
-            .redirect(`${process.env.FRONTEND_ORIGN}/dashboard`)
+            .redirect(`${FRONTEND_ORIGIN}/dashboard`)
         }
 
         // check username or email
@@ -299,7 +303,7 @@ const googleSignSomehing = asyncHandler(
         res
         // .status(300) // this was causing badrequest while oauth
         .cookie("accessToken", token, cookieOptions)
-        .redirect(`${process.env.FRONTEND_ORIGN}/dashboard`)
+        .redirect(`${FRONTEND_ORIGIN}/dashboard`)
     }
 )
 

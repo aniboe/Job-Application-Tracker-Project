@@ -6,8 +6,8 @@ import { User } from "../models/user.models.js"
 export const authenticate = asyncHandler(
     // async (err, req, res, next) => {
     async (req, res, next) => {
-        // get cookie from brouser
-        const token = await req.cookies?.accessToken
+        // get cookie from browser
+        const token = req.cookies?.accessToken
         console.log("token: ",token)
 
         // check if cookies are available
