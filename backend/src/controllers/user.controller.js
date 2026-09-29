@@ -237,7 +237,7 @@ const googleSignSomehing = asyncHandler(
             )
     
             return res // wothout reurn this wont stop
-            .status(200)
+            // .status(300) // this was causing badrequest while oauth
             .cookie("accessToken", token, cookieOptions)
             .redirect(`${process.env.FRONTEND_ORIGN}/dashboard`)
         }
@@ -266,7 +266,8 @@ const googleSignSomehing = asyncHandler(
         user = await User.create(
             {
                 googleId: payload?.sub,
-                username: payload?.given_name,
+                // username: payload?.given_name,
+                username: username, // if same name not available then add number after name
                 email: payload?.email,
                 avatar: payload?.picture
             }
@@ -288,7 +289,7 @@ const googleSignSomehing = asyncHandler(
 
 
         res
-        .status(200)
+        // .status(300) // this was causing badrequest while oauth
         .cookie("accessToken", token, cookieOptions)
         .redirect(`${process.env.FRONTEND_ORIGN}/dashboard`)
     }
