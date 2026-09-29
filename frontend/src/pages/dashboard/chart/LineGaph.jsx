@@ -33,7 +33,7 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 function LineGaph({ lineGraphData = [] }) {
-  console.log(lineGraphData);
+  // console.log(lineGraphData);
   
   return (
     <div className="h-full w-full">

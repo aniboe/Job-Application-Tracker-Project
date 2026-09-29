@@ -235,7 +235,7 @@ const googleSignSomehing = asyncHandler(
             return res // wothout reurn this wont stop
             .status(200)
             .cookie("accessToken", token, cookieOptions)
-            .redirect("http://localhost:5173/dashboard")
+            .redirect(`${process.env.FRONTEND_ORIGN}/dashboard`)
         }
 
         // check username or email
@@ -286,7 +286,7 @@ const googleSignSomehing = asyncHandler(
         res
         .status(200)
         .cookie("accessToken", token, cookieOptions)
-        .redirect("http://localhost:5173/dashboard")
+        .redirect(`${process.env.FRONTEND_ORIGN}/dashboard`)
     }
 )
 

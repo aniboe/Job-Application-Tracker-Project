@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../../main.jsx';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import LineGaph from './chart/LineGaph';
 import BarGraph from './chart/BarGraph';
 import RecentAplication from './cards/RecentAplication';
-import { allAplications } from '../../redux/slices/aplicationData.slice.js';
 import { LuArrowRight } from 'react-icons/lu';
+import { addApplicationData, allAplications } from '../../redux/slices/aplicationData.slice.js';
+import { addUserData } from '../../redux/slices/userData.slice.js';
 
 const METRIC_CARDS = [
   { key: 'Applied', label: 'Applied', dot: 'bg-blue-500' },
@@ -23,6 +24,23 @@ function Dash() {
   const rawApplications = useSelector(allAplications) || [];
   const recentTenApplication = rawApplications.slice(-10).reverse();
 
+
+
+  const fetchAppData = async () => {
+    try {
+      const [applicationsRes, userRes] = await Promise.all([
+        api.get(`/data/get-all-data`),
+        api.get(`/user/me`),
+      ]);
+
+      dispatch(addApplicationData(applicationsRes?.data));
+      dispatch(addUserData(userRes?.data?.data));
+    } catch (err) {
+      console.error('Failed to sync data after login:', err.message);
+    }
+  };
+
+
   useEffect(() => {
     const fetchDashboardMetrics = async () => {
       try {
@@ -35,6 +53,8 @@ function Dash() {
           },
           {}
         );
+
+        fetchAppData()
 
         setLineGraphData(response.data?.lineGraphData || []);
         setCardStatusCount(properObjectData);

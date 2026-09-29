@@ -24,19 +24,6 @@ export function Login() {
     }
   }, [userData, navigate]);
 
-  const fetchAppData = async () => {
-    try {
-      const [applicationsRes, userRes] = await Promise.all([
-        api.get(`/data/get-all-data`),
-        api.get(`/user/me`),
-      ]);
-
-      dispatch(addApplicationData(applicationsRes?.data));
-      dispatch(addUserData(userRes?.data?.data));
-    } catch (err) {
-      console.error('Failed to sync data after login:', err.message);
-    }
-  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
