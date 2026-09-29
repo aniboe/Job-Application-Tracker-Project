@@ -14,10 +14,18 @@ import { OAuth } from "../utility/GoogleAuth.js"
 import crypto from 'crypto'
 
 
+// const cookieOptions = {
+//     httpOnly: true,
+//     secure: process.env.NODE_ENV === "production" ? true : false,
+//     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+//     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days { cookies disapear after pc restarts thats why to check , might be some other issue}
+//     // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // same thing but diffrent syntax
+// }
 const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production" ? true : false,
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    secure: true,
+    sameSite: "none",
+    path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days { cookies disapear after pc restarts thats why to check , might be some other issue}
     // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // same thing but diffrent syntax
 }
