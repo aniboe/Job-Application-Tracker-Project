@@ -3,9 +3,11 @@ import mongoose from "mongoose"
 
 const UserSchema = mongoose.Schema(
     {
-        googleId: {
+        googleId: {// if we keep them empty then it creats "multiple" empty googleid
             type: String,
-            unique: true
+            // unique: true,
+            // sparse: true, // fix for multiple empty googleId
+            default: ""
         },
         username: {
             type: String,

@@ -36,7 +36,6 @@ export function Login() {
         password: password,
       });
 
-      await fetchAppData();
       navigate('/dashboard');
     } catch (err) {
       setError(err?.response?.data?.message || 'Invalid username or password');

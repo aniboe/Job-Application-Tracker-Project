@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../main.jsx';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import LineGaph from './chart/LineGaph';
 import BarGraph from './chart/BarGraph';
 import RecentAplication from './cards/RecentAplication';
@@ -18,6 +18,9 @@ const METRIC_CARDS = [
 ];
 
 function Dash() {
+
+  const dispatch = useDispatch()
+  
   const [cardStatusCount, setCardStatusCount] = useState({});
   const [lineGraphData, setLineGraphData] = useState([]);
 

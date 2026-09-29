@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../main';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { userValue } from '../../redux/slices/userData.slice';
+import { useSelector, useDispatch } from 'react-redux';
+import { addUserData, userValue } from '../../redux/slices/userData.slice';
 import { IoAlertCircle } from "react-icons/io5";
 import GoogleAuthBtn from './GoogleAuthBtn';
+import { addApplicationData } from '../../redux/slices/aplicationData.slice';
 
 export function Register() {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const userData = useSelector(userValue);
 
@@ -96,7 +98,7 @@ export function Register() {
         password: password,
       });
 
-      fetchAppData()
+      await fetchAppData()
 
       navigate('/dashboard');
     } catch (err) {
@@ -205,7 +207,7 @@ export function Register() {
                 onChange={(e) => setOtp(e.target.value)}
                 required
                 autoFocus
-                maxLength={6}
+                maxLength={8}
                 className="h-9 px-3 text-center tracking-widest text-base font-medium rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 transition-colors shadow-2xs"
                 placeholder="123456"
               />

@@ -102,16 +102,20 @@ const login = asyncHandler(
         }
 
         // if the account exists in database
+
+        const LoginInput = usernameOrEmail.toLowerCase()
         const isUserRegistered = await User.findOne({
             $or: [
-                {username: usernameOrEmail.toLowerCase()},
-                {email: usernameOrEmail.toLowerCase()},
+                {username: LoginInput},
+                {email: LoginInput},
             ]
         })
         if(!isUserRegistered) throw new ApiError(400, "user is not registered")
 
         // if exists compare password 
         const passworCHeck = await isUserRegistered.isPasswordCorrect(password)
+
+        // console.log(passworCHeck)
 
         if(!passworCHeck) throw new ApiError(400, "password or user incorrect")
 
@@ -600,7 +604,7 @@ const verifyOtp = asyncHandler(
         if(!otpInDb){
             throw new ApiError(400, "otp expired or invalid")
         }
-        const isOtpCorrect = otpInDb.isOtpCorrect(otp)
+        const isOtpCorrect = await otpInDb.isOtpCorrect(otp)
         if(!isOtpCorrect){
             throw new ApiError(400, "invalid otp")
         }
