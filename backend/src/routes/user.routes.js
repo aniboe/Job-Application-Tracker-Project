@@ -11,7 +11,8 @@ import { login,
     sendOtp,
     verifyOtp,
     createGoogleAuthLink,
-    googleSignSomehing} from "../controllers/user.controller.js";
+    googleSignSomehing,
+    setCookieForOAuth} from "../controllers/user.controller.js";
 
 import { authenticate } from "../middlewares/verifyJWT.js";
 import { upload } from "../middlewares/multer.js";
@@ -33,5 +34,6 @@ userRouter.route("/verify-otp").post(verifyOtp)
 
 userRouter.route("/google/consent").get(createGoogleAuthLink)
 userRouter.route("/google/callback").get(googleSignSomehing)
+userRouter.route("/google/set-cookie").post(setCookieForOAuth)
 
 export default userRouter

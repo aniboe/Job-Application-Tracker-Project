@@ -27,7 +27,7 @@ const cookieOptions = {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-    path: "/",
+    // path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days { cookies disapear after pc restarts thats why to check , might be some other issue}
     // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // same thing but diffrent syntax
 }
@@ -183,7 +183,7 @@ const googleSignSomehing = asyncHandler(
 
         // get the query from returned page 
         const { code } = req.query
-            console.log("OAuth callback query:", req.query)
+            // console.log("OAuth callback query:", req.query)
         if(!code){
             throw new ApiError(400, "could not verify user")
         }
@@ -194,7 +194,7 @@ const googleSignSomehing = asyncHandler(
         // const acc = await OAuth.getAccessToken(code) // maybe this used to be a thing, but not any more
         
         const { tokens } = await OAuth.getToken(code)
-        console.log("OAuth tokens:", tokens)
+        // console.log("OAuth tokens:", tokens)
         if(!tokens){
             throw new ApiError(400,"invalid token recieded from OAuth")
         }
@@ -250,8 +250,8 @@ const googleSignSomehing = asyncHandler(
     
             return res // wothout reurn this wont stop
             // .status(300) // this was causing badrequest while oauth
-            .cookie("accessToken", token, cookieOptions)
-            .redirect(`${FRONTEND_ORIGIN}/dashboard`)
+            // .cookie("accessToken", token, cookieOptions) // doesnt work for some reason
+            .redirect(`${FRONTEND_ORIGIN}/auth-success?token=${token}`)
         }
 
         // check username or email
@@ -301,9 +301,24 @@ const googleSignSomehing = asyncHandler(
 
 
         res
-        // .status(300) // this was causing badrequest while oauth
+        // .status(300) // this was causing badrequest while oauth (wasnt lol, could be idk , definately not main reason) 
+        // .cookie("accessToken", token, cookieOptions) // like i said doesnt work
+        .redirect(`${FRONTEND_ORIGIN}/auth-success?token=${token}`)
+    }
+)
+
+const setCookieForOAuth = asyncHandler(
+    async(req, res) => {
+        const { token } = req.body
+
+        res
+        .status(200)
         .cookie("accessToken", token, cookieOptions)
-        .redirect(`${FRONTEND_ORIGIN}/dashboard`)
+        .json( new ApiResponce(
+            200,
+            {},
+            "cookie set succesfully"
+        ))
     }
 )
 
@@ -648,4 +663,5 @@ export {
     verifyOtp,
     createGoogleAuthLink,
     googleSignSomehing,
+    setCookieForOAuth,
 }

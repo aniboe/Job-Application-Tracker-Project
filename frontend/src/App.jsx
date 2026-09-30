@@ -13,6 +13,7 @@ import { addUserData } from './redux/slices/userData.slice.js'
 import NotFound from './pages/not-Found/NotFound.jsx'
 import Setting from './pages/settings/Setting.jsx'
 import KanBan from './pages/kanBanBoard/KanBan.jsx'
+import SetGoogleCookie from './pages/auth/SetGoogleCookie.jsx'
 
 
 //  this function calles the application and used in more then one place i gues 
@@ -60,7 +61,7 @@ function App() {
         <Route path='/login' element={ <Login/> }/>
         <Route path='/register' element={ <Register/> }/>
         <Route path='*' element={ <NotFound/> }/>
-
+        <Route path="/auth-success" element={<SetGoogleCookie/>} />
 
 
         {/* Protected routes */}

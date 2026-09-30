@@ -8,7 +8,7 @@ export const authenticate = asyncHandler(
     async (req, res, next) => {
         // get cookie from browser
         const token = req.cookies?.accessToken
-        console.log("token: ",token)
+        // console.log("token: ",token)
 
         // check if cookies are available
         if(!token) throw new ApiError(400, "invalid cookie")
@@ -17,7 +17,7 @@ export const authenticate = asyncHandler(
         const decodedJWT = await JWT.verify(token, process.env.JWT_SECRET)
 
         if(!decodedJWT) throw new ApiError(400, "invalid token")
-        console.log("decodedJWT: ",decodedJWT)
+        // console.log("decodedJWT: ",decodedJWT)
 
         // const isUserInDB = await User.findById({_id: decodedJWT._id}).select("-password -createdAt -updatedAt -__v")
         const isUserInDB = await User.findOne({
